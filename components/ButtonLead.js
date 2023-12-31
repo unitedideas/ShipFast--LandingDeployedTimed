@@ -19,7 +19,7 @@ const ButtonLead = ({ extraStyle }) => {
 
     setIsLoading(true);
     try {
-      console.log(`apiClient Post???: ${email}`);
+      console.log(`apiClient Post?: ${email}`);
       await apiClient.post("/lead", { email });
 
       toast.success("Thanks for joining the wait list!");
