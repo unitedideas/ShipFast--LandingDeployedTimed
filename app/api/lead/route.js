@@ -7,6 +7,9 @@ import { cookies } from "next/headers";
 export async function POST(req) {
   const body = await req.json();
 
+  console.log(`New lead: ${body}`);
+  console.log(`New lead: ${body.email}`);
+
   if (!body.email) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
   }
@@ -15,9 +18,6 @@ export async function POST(req) {
     const supabase = createRouteHandlerClient({ cookies });
     await supabase.from("leads").insert({ email: body.email });
 
-    console.log(`New lead: ${body.email}`);
-    console.log(`New lead: ${body.email}`);
-    console.log(`New lead: ${body.email}`);
     console.log(`New lead: ${body.email}`);
 
     return NextResponse.json({});
