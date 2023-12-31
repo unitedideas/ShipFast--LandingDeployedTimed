@@ -21,6 +21,8 @@ export default function Login() {
 
     try {
       const { type, provider } = options;
+      console.log("type", type);
+        console.log("provider", provider);
       const redirectURL = window.location.origin + "/api/auth/callback";
 
       if (type === "oauth") {
