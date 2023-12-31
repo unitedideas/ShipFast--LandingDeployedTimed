@@ -21,11 +21,10 @@ export default function Login() {
 
     try {
       const { type, provider } = options;
-      console.log("type", type);
-        console.log("provider", provider);
       const redirectURL = window.location.origin + "/api/auth/callback";
 
       if (type === "oauth") {
+        console.error("oauth", type);
         await supabase.auth.signInWithOAuth({
           provider,
           options: {
@@ -33,6 +32,7 @@ export default function Login() {
           },
         });
       } else if (type === "magic_link") {
+        console.error("oauth", type);
         await supabase.auth.signInWithOtp({
           email,
           options: {
@@ -45,6 +45,10 @@ export default function Login() {
         setIsDisabled(true);
       }
     } catch (error) {
+      console.log(error);
+      console.log(error);
+      console.log(error);
+      console.log(error);
       console.log(error);
     } finally {
       setIsLoading(false);
