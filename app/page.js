@@ -7,6 +7,7 @@ import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import ButtonLead from "@/components/ButtonLead";
+import ThumbnailGenerator from "@/components/ThumbnailGenerator";
 
 export default function Home() {
     return (
@@ -15,6 +16,7 @@ export default function Home() {
             <main>
                 <ButtonLead extraStyle="!max-w-none !w-full"/>
                 <Hero />
+                <ThumbnailGenerator />
                 <Problem />
                 <FeaturesAccordion />
                 <Pricing />

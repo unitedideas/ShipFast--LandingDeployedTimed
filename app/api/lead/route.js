@@ -5,8 +5,6 @@ import { cookies } from "next/headers";
 // This route is used to store the leads that are generated from the landing page.
 // The API call is initiated by <ButtonLead /> component
 export async function POST(req) {
-  await console.log(`api/lead-body: ${req}`);
-  await console.log(`api/lead-body.email ${req.email}`);
   const body = await req.json();
 
   if (!body.email) {
