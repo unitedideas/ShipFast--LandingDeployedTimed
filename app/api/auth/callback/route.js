@@ -16,5 +16,10 @@ export async function GET(req) {
   }
 
   // URL to redirect to after sign in process completes
+
+  console.log(requestUrl)
+  console.log(requestUrl.origin)
+  console.log(config.auth)
+  console.log(config.auth.callbackUrl)
   return NextResponse.redirect(requestUrl.origin + config.auth.callbackUrl);
 }
