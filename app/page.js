@@ -1,6 +1,3 @@
-import ButtonSignin from "@/components/ButtonSignin";
-
-export default function Page() {
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Problem from "@/components/Problem";
@@ -11,18 +8,18 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  return (
-      <>
-        <Header />
-        <main>
-          <Hero />
-          <Problem />
-          <FeaturesAccordion />
-          <Pricing />
-          <FAQ />
-          <CTA />
-        </main>
-        <Footer />
-      </>
-  );
+    return (
+        <>
+            <Header />
+            <main>
+                <Hero />
+                <Problem />
+                <FeaturesAccordion />
+                <Pricing />
+                <FAQ />
+                <CTA />
+            </main>
+            <Footer />
+        </>
+    );
 }
