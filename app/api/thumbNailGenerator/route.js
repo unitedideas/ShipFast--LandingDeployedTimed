@@ -18,8 +18,8 @@ export async function POST(req) {
     try {
         const genBody = {
             model: "dall-e-3",
-            prompt: `I NEED to test how the tool works with extremely simple prompts. DO NOT add any detail, just use it AS-IS: ${body.sceneDescription}`,
-            // quality: "hd",
+            prompt: `In the form of: ${body.artStyle}. Scene: ${body.sceneDescription}. Main subject: ${body.subject}. The mood is ${body.tone}. Make sure you dont modify the following text: "${body.tnText}". This image needs to maximize views based on the data of views for other youtube thumbnails. Do no include the YouTube logo or the text "YouTube"`,
+            quality: "hd",
             size: "1792x1024",
             style: "vivid",
             response_format: "b64_json",

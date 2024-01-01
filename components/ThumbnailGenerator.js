@@ -1,11 +1,15 @@
 "use client";
-import { useRef, useState } from "react";
+import {useRef, useState} from "react";
 import apiClient from "@/libs/api";
 import Image from "next/image";
 
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
     const [sceneDescription, setSceneDescription] = useState("");
+    const [artStyle, setArtStyle] = useState("");
+    const [subject, setSubject] = useState("");
+    const [tnText, settnText] = useState("");
+    const [tone, setTone] = useState("");
     const [base64Image, setBase64Image] = useState(''); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -18,7 +22,13 @@ const ThumbnailGenerator = () => {
 
         try {
             // Perform the API call
-            const response = await apiClient.post("/thumbNailGenerator", { sceneDescription });
+            const response = await apiClient.post("/thumbNailGenerator", {
+                sceneDescription,
+                artStyle,
+                subject,
+                tnText,
+                tone
+            });
 
             console.log("response", response);
 
@@ -30,7 +40,6 @@ const ThumbnailGenerator = () => {
 
             // Reset the form fields and remove focus
             inputRef.current?.blur();
-            setSceneDescription("");
         } catch (error) {
             console.error(error);
             // Handle the error appropriately
@@ -40,19 +49,54 @@ const ThumbnailGenerator = () => {
         }
     };
 
-    console.log("base64Image", base64Image);
-
     return (
         <div>
             <form onSubmit={handleSubmit}>
+                <h1 className="text-xl font-bold mb-4">Generate YouTube Thumbnail</h1>
+                <p className="text-sm text-gray-500 mb-4">
+                    This example uses the OpenAI API to generate a YouTube thumbnail based on a description of the scene
+                    and the art style.
+                </p>
+
+                <input
+                    required
+                    type="text"
+                    value={artStyle}
+                    placeholder="Image Type Example: photograph, illustration, drawing, oil painting."
+                    className="input input-bordered w-full placeholder:opacity-60"
+                    onChange={(e) => setArtStyle(e.target.value)}
+                />
                 <input
                     required
                     type="text"
                     value={sceneDescription}
-                    autoComplete="off"
-                    placeholder="Enter a description of the scene"
+                    placeholder="Setting: Quick description of the environment"
                     className="input input-bordered w-full placeholder:opacity-60"
                     onChange={(e) => setSceneDescription(e.target.value)}
+                />
+                <input
+                    required
+                    type="text"
+                    value={subject}
+                    placeholder="Main Subjects: Briefly highlight the primary elements."
+                    className="input input-bordered w-full placeholder:opacity-60"
+                    onChange={(e) => setSubject(e.target.value)}
+                />
+                <input
+                    required
+                    type="text"
+                    value={tnText}
+                    placeholder="Text Placement & Style: Specify text details - Example: Text 'Smartphone Showdown' in bold, white letters centered at the bottom."
+                    className="input input-bordered w-full placeholder:opacity-60"
+                    onChange={(e) => settnText(e.target.value)}
+                />
+                <input
+                    required
+                    type="text"
+                    value={tone}
+                    placeholder="Overall Mood: Set the tone or style. Example: 'Modern and dynamic.'"
+                    className="input input-bordered w-full placeholder:opacity-60"
+                    onChange={(e) => setTone(e.target.value)}
                 />
 
                 <button
