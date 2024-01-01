@@ -1,28 +1,38 @@
 import {NextResponse} from "next/server";
-import {sendOpenAi} from "@/libs/gpt";
+import OpenAI from "openai";
 
+const openAI = new OpenAI();
 // This route is used to store the leads that are generated from the landing page.
 // The API call is initiated by <ButtonLead /> component
 export async function POST(req) {
+    await console.log("in the post call");
     const body = await req.json();
+    await console.log("body", body);
 
-    if (!body.artStyle || !body.sceneDescription) {
-        return NextResponse.json({error: "Style or Description missing"}, {status: 400});
+    if (!body.sceneDescription) {
+        console.log("Description missing");
+        return NextResponse.json({error: "Description missing"}, {status: 400});
     }
 
+    console.log("inside generateYoutubeThumbnail");
     try {
-        // messages, userId, max = 100, temp = 1
-        const messages = [
-            { role: 'system', content: 'Your system message here, if any.' },
-            { role: 'user', content: `Art style: ${body.artStyle}` },
-            { role: 'user', content: `Scene description: ${body.sceneDescription}` }
-        ];
+        const genBody = {
+            model: "dall-e-3",
+            prompt: `I NEED to test how the tool works with extremely simple prompts. DO NOT add any detail, just use it AS-IS: ${body.sceneDescription}`,
+            // quality: "hd",
+            size: "1792x1024",
+            style: "vivid",
+            response_format: "b64_json",
+        }
 
-        const response = await sendOpenAi(messages, 1, 100, 0.7);
-        console.log(response);
-        return NextResponse.json({response: response});
+        const thumbNail = await openAI.images.generate(genBody);
+        console.log("thumbnail", thumbNail);
+        // Return a NextResponse with the thumbnail data
+        return NextResponse.json({ thumbnail: thumbNail }, { status: 200 });
     } catch (e) {
-        console.error(e.message);
-        return NextResponse.json({error: e.message}, {status: 500});
+        console.error("GPT Error: " + e);
+        // Return a NextResponse object with an error status and message
+        return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
     }
 }
+

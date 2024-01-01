@@ -1,91 +1,85 @@
 "use client";
-
-import { useState, useRef } from "react";
-import { toast } from "react-hot-toast";
+import { useRef, useState } from "react";
 import apiClient from "@/libs/api";
+import Image from "next/image";
 
-const ThumbnailGenerator = ({ extraStyle }) => {
+const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
-    const [artStyle, setArtStyle] = useState("");
     const [sceneDescription, setSceneDescription] = useState("");
+    const [base64Image, setBase64Image] = useState(''); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
 
     const handleSubmit = async (e) => {
-        e?.preventDefault();
+        e.preventDefault();
 
         setIsLoading(true);
+        setIsDisabled(true); // Disable the button to prevent multiple submissions
+
         try {
-            console.log(`apiClient Post - Art Style: ${artStyle}`);
-            console.log(`apiClient Post - Scene Description: ${sceneDescription}`);
+            // Perform the API call
+            const response = await apiClient.post("/thumbNailGenerator", { sceneDescription });
 
-            // Make sure the endpoint and payload are correct
-            await apiClient.post("/thumbNailGenerator", { artStyle, sceneDescription });
+            console.log("response", response);
 
-            toast.success("Thanks for joining the waitlist!");
+            // Assuming the server responds with a JSON object containing the thumbnail data
+            if (response.thumbnail.data && response.thumbnail.data && response.thumbnail.data.length > 0) {
+                console.log("response", response.thumbnail.data[0].b64_json);
+                setBase64Image(response.thumbnail.data[0].b64_json); // Set the base64 string in the state
+            }
 
             // Reset the form fields and remove focus
             inputRef.current?.blur();
-            setArtStyle("");
             setSceneDescription("");
         } catch (error) {
-            console.log(error);
-            // Handle error appropriately
-            // Check if 'messages' variable is used here incorrectly
+            console.error(error);
+            // Handle the error appropriately
         } finally {
             setIsLoading(false);
+            setIsDisabled(false); // Re-enable the button after the operation is complete
         }
     };
 
-    return (
-        <form
-            className={`w-full max-w-xs space-y-3 ${extraStyle ? extraStyle : ""}`}
-            onSubmit={handleSubmit}
-        >
-            <input
-                required
-                type="text"
-                value={artStyle}
-                ref={inputRef}
-                autoComplete=""
-                placeholder="photorealistic"
-                className="input input-bordered w-full placeholder:opacity-60"
-                onChange={(e) => setArtStyle(e.target.value)}
-            />
+    console.log("base64Image", base64Image);
 
-            <input
-                required
-                type="text"
-                value={sceneDescription}
-                autoComplete=""
-                placeholder="A modern cityscape"
-                className="input input-bordered w-full placeholder:opacity-60"
-                onChange={(e) => setSceneDescription(e.target.value)}
-            />
-            <button
-                className="btn btn-primary btn-block"
-                type="submit"
-                disabled={isDisabled}
-            >
-                Enter your style here
-                {isLoading ? (
-                    <span className="loading loading-spinner loading-xs"></span>
-                ) : (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="w-5 h-5"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
-                )}
-            </button>
-        </form>
+    return (
+        <div>
+            <form onSubmit={handleSubmit}>
+                <input
+                    required
+                    type="text"
+                    value={sceneDescription}
+                    autoComplete="off"
+                    placeholder="Enter a description of the scene"
+                    className="input input-bordered w-full placeholder:opacity-60"
+                    onChange={(e) => setSceneDescription(e.target.value)}
+                />
+
+                <button
+                    className="btn btn-primary btn-block"
+                    type="submit"
+                    disabled={isDisabled}
+                >
+                    {isLoading ? (
+                        <span className="loading loading-spinner loading-xs"></span>
+                    ) : (
+                        "Generate Thumbnail"
+                    )}
+                </button>
+            </form>
+
+            {base64Image && (
+                <div className="image-preview">
+                    {/* Using the base64 string as the source of the image */}
+                    <Image
+                        src={`data:image/png;base64,${base64Image}`}
+                        alt="Generated Thumbnail"
+                        width={1280}
+                        height={70}
+                    />
+                </div>
+            )}
+        </div>
     );
 };
 

@@ -24,6 +24,7 @@
     "next-sitemap": "^4.2.2",
     "nextjs-toploader": "^1.4.2",
     "nodemailer": "^6.9.4",
+    "openai": "^4.24.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
