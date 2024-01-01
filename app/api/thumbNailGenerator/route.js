@@ -17,10 +17,11 @@ export async function POST(req) {
     console.log("inside generateYoutubeThumbnail");
     try {
         const genBody = {
-            model: "dall-e-3",
+            model: "dall-e-2",
+            n: 3,
             prompt: `In the form of: ${body.artStyle}. Scene: ${body.sceneDescription}. Main subject: ${body.subject}. The mood is ${body.tone}. Make sure you dont modify the following text: "${body.tnText}". This image needs to maximize views based on the data of views for other youtube thumbnails. Do no include the YouTube logo or the text "YouTube"`,
             quality: "hd",
-            size: "1792x1024",
+            // size: "1792x1024",
             style: "vivid",
             response_format: "b64_json",
         }

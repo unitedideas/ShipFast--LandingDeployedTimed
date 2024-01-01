@@ -10,7 +10,7 @@ const ThumbnailGenerator = () => {
     const [subject, setSubject] = useState("");
     const [tnText, settnText] = useState("");
     const [tone, setTone] = useState("");
-    const [base64Image, setBase64Image] = useState(''); // State to store the base64 image data
+    const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
 
@@ -32,10 +32,10 @@ const ThumbnailGenerator = () => {
 
             console.log("response", response);
 
-            // Assuming the server responds with a JSON object containing the thumbnail data
-            if (response.thumbnail.data && response.thumbnail.data && response.thumbnail.data.length > 0) {
-                console.log("response", response.thumbnail.data[0].b64_json);
-                setBase64Image(response.thumbnail.data[0].b64_json); // Set the base64 string in the state
+            if (response.thumbnail.data && response.thumbnail.data.length > 0) {
+                // Map through the data array and set images in the state
+                const imageList = response.thumbnail.data.map((item) => item.b64_json);
+                setBase64Image(imageList);
             }
 
             // Reset the form fields and remove focus
@@ -112,19 +112,22 @@ const ThumbnailGenerator = () => {
                 </button>
             </form>
 
-            {base64Image && (
+            {Array.isArray(base64Image) && base64Image.length > 0 && (
                 <div className="image-preview">
-                    {/* Using the base64 string as the source of the image */}
-                    <Image
-                        src={`data:image/png;base64,${base64Image}`}
-                        alt="Generated Thumbnail"
-                        width={1280}
-                        height={70}
-                    />
+                    {base64Image.map((imageData, index) => (
+                        <div key={index} className="thumbnail-item">
+                            <Image
+                                src={`data:image/png;base64,${imageData}`}
+                                alt={`Generated Thumbnail ${index + 1}`}
+                                width={1280}
+                                height={70}
+                            />
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
 
 export default ThumbnailGenerator;
