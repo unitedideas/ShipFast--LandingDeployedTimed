@@ -1,6 +1,8 @@
 import {NextResponse} from "next/server";
 import OpenAI from "openai";
 
+export const runtime = 'edge';
+
 const openAI = new OpenAI();
 // This route is used to store the leads that are generated from the landing page.
 // The API call is initiated by <ButtonLead /> component
