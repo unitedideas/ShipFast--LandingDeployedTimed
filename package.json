@@ -14,6 +14,7 @@
     "@supabase/auth-helpers-nextjs": "^0.8.1",
     "@supabase/supabase-js": "^2.38.3",
     "@vercel/analytics": "^1.1.1",
+    "@vercel/speed-insights": "^1.0.2",
     "axios": "^1.4.0",
     "crisp-sdk-web": "^1.0.21",
     "eslint": "8.47.0",
