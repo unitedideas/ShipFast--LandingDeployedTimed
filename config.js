@@ -2,10 +2,10 @@ import themes from "daisyui/src/theming/themes.js";
 
 const config = {
   // REQUIRED
-  appName: "ShipFast",
+  appName: "YouThumb",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
-    "The NextJS boilerplate with all you need to build your SaaS, AI tool, or any other web app.",
+    "Proven Ai generated thumbnails for your YouTube videos. Get more views and subscribers with YouThumb.",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
   domainName: "ship-fast-landing-deployed-timed.vercel.app",
   crisp: {
