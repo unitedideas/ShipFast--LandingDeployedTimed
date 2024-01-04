@@ -12,13 +12,11 @@ export async function POST(req) {
 
     const genBody = {
         model: "dall-e-3",
-        prompt: `In the form of: ${body.artStyle}.
-        Scene: ${body.sceneDescription}.
-        Main subject: ${body.subject}.
-        The mood is ${body.tone}.
-        Make sure you dont modify the following text: "${body.tnText}".
-        This image needs to maximize views based on the data of views for other youtube thumbnails.
-        Do no include the YouTube logo or the text "YouTube"`,
+        prompt: `In the style of: ${body.artStyle}.
+        The Scene/Theme: ${body.sceneDescription}.
+        Main subject of the scene/theme: ${body.subject}.
+        Place the text/title in the ${body.textPlacement}.
+        Make sure you dont modify the following text/title(in quotes): "${body.tnText}".`,
         quality: "hd",
         size: "1792x1024",
         style: "vivid",
