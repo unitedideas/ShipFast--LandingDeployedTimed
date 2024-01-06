@@ -11,15 +11,17 @@ const ThumbnailGenerator = () => {
     const [artStyle, setArtStyle] = useState("");
     const [subject, setSubject] = useState("");
     const [tnText, settnText] = useState("");
-    const [textPlacement, setTextPlacement] = useState("");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [selectedFont, setSelectedFont] = useState('Arial'); // Default font
     const [textX, setTextX] = useState(0); // X-coordinate for text placement
     const [textY, setTextY] = useState(0); // Y-coordinate for text placement
-    const [isImageClicked, setIsImageClicked] = useState(false); // To check if image was clicked for text placement
     const [fontSize, setFontSize] = useState(16); // Default font size
+    const [textColor, setTextColor] = useState('#FFFFFF'); // Default white color
+    const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
+    const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
+    const [textOutline, setTextOutline] = useState(false); // Text outline toggle
 
     // Function to handle font selection
     function handleFontChange(event) {
@@ -40,6 +42,19 @@ const ThumbnailGenerator = () => {
 
             // Ensure the image is loaded before drawing it on the canvas
             img.onload = () => {
+                const finalImage = renderTextOnImage(
+                    img,
+                    tnText,
+                    textX,
+                    textY,
+                    selectedFont,
+                    textColor,
+                    textRotation,
+                    textShadow,
+                    textOutline,
+                    fontSize
+                );
+
                 // Create a canvas with the same dimensions as the image
                 const canvas = document.createElement('canvas');
                 canvas.width = img.width;
@@ -58,13 +73,62 @@ const ThumbnailGenerator = () => {
                 ctx.fillText(tnText, textX, textY);
 
                 // Convert the canvas to a data URL and download
-                const dataURL = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.download = 'thumbnail.png';
-                link.href = dataURL;
+                link.href = finalImage;
                 link.click();
             };
         }
+    }
+
+    // Function to render text on the image
+    function renderTextOnImage(image, text, x, y, font, color, rotation, shadow, outline, fontSize) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        // Draw the image onto the canvas
+        ctx.drawImage(image, 0, 0);
+
+        // Set text properties
+        ctx.font = `${fontSize}px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Save context state
+        ctx.save();
+
+        // Translate and rotate context for text rotation
+        ctx.translate(x, y);
+        ctx.rotate(rotation * Math.PI / 180);
+
+        // Optional: Apply drop shadow
+        if (shadow) {
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+            ctx.shadowBlur = 2;
+        }
+
+        // Draw the text with optional outline
+        if (outline) {
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            ctx.strokeText(text, 0, 0); // Draw the outline
+        }
+
+        // Draw the text
+        ctx.fillText(text, 0, 0);
+
+        // Restore context state to not affect the rest of the canvas
+        ctx.restore();
+
+        // Return the canvas as a data URL
+        return canvas.toDataURL('image/png');
     }
 
     const handleSubmit = async (e) => {
@@ -79,8 +143,6 @@ const ThumbnailGenerator = () => {
                 sceneDescription,
                 artStyle,
                 subject,
-                tnText,
-                textPlacement,
             });
 
             console.log("response", response);
@@ -154,6 +216,45 @@ const ThumbnailGenerator = () => {
                     className="input input-bordered w-full placeholder:opacity-40"
                     onChange={(e) => settnText(e.target.value)}
                 />
+                {/* Text Color Picker */}
+                <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => setTextColor(e.target.value)}
+                    className="input input-bordered"
+                />
+
+                {/* Text Rotation Slider */}
+                <input
+                    type="range"
+                    min="0"
+                    max="360"
+                    value={textRotation}
+                    onChange={(e) => setTextRotation(e.target.value)}
+                    className="slider"
+                />
+
+                {/* Drop Shadow Toggle */}
+                <label className="label cursor-pointer">
+                    <span className="label-text">Drop Shadow</span>
+                    <input
+                        type="checkbox"
+                        checked={textShadow}
+                        onChange={(e) => setTextShadow(e.target.checked)}
+                        className="toggle"
+                    />
+                </label>
+
+                {/* Text Outline Toggle */}
+                <label className="label cursor-pointer">
+                    <span className="label-text">Text Outline</span>
+                    <input
+                        type="checkbox"
+                        checked={textOutline}
+                        onChange={(e) => setTextOutline(e.target.checked)}
+                        className="toggle"
+                    />
+                </label>
                 <select value={selectedFont} onChange={handleFontChange} className="input input-bordered w-full mb-4">
                     <option value="Arial">Arial</option>
                     <option value="Verdana">Verdana</option>
@@ -182,13 +283,13 @@ const ThumbnailGenerator = () => {
                             <Image
                                 src={`data:image/png;base64,${imageData}`}
                                 alt={`Generated Thumbnail ${index + 1}`}
-                                layout="fill" // This will make the image fill the parent div
-                                objectFit="contain" // Adjust this as needed for your image scaling
+                                layout="fill"
+                                objectFit="contain"
                             />
                             <Draggable
                                 bounds="parent"
-                                position={{x: textX, y: textY}}
-                                onStop={(e, data) => {
+                                position={{ x: textX, y: textY }}
+                                onDrag={(e, data) => {
                                     setTextX(data.x);
                                     setTextY(data.y);
                                 }}
@@ -196,10 +297,18 @@ const ThumbnailGenerator = () => {
                                 <div
                                     style={{
                                         position: 'absolute',
-                                        color: 'white',
+                                        left: 0,
+                                        top: 0,
+                                        color: textColor,
                                         fontFamily: selectedFont,
                                         fontSize: `${fontSize}px`,
-                                        cursor: 'move' // Optional, for a better UX
+                                        cursor: 'move',
+                                        // Apply rotation and translation together
+                                        transform: `translate(${textX}px, ${textY}px) rotate(${textRotation}deg)`,
+                                        transformOrigin: 'center',
+                                        textShadow: textShadow ? '2px 2px 4px rgba(0, 0, 0, 0.5)' : '',
+                                        // Apply text-stroke if textOutline is true
+                                        WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
                                     }}
                                 >
                                     {tnText}
