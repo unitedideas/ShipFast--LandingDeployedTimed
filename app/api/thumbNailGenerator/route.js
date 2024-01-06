@@ -14,12 +14,10 @@ export async function POST(req) {
         model: "dall-e-3",
         prompt: `In the style of: ${body.artStyle}.
         The Scene/Theme: ${body.sceneDescription}.
-        Main subject of the scene/theme: ${body.subject}.
-        Place the text/title in the ${body.textPlacement}.
-        Make sure you dont modify the following text/title(in quotes): "${body.tnText}".`,
-        quality: "hd",
+        Main subject of the scene/theme: ${body.subject}.`,
+        quality: "standard",
         size: "1792x1024",
-        style: "vivid",
+        style: "natural",
         response_format: "b64_json",
     }
 

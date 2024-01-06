@@ -29,6 +29,7 @@
     "openai": "^4.24.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-draggable": "^4.4.6",
     "react-hot-toast": "^2.4.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.21.1",
