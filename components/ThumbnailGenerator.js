@@ -17,7 +17,7 @@ const ThumbnailGenerator = () => {
     const [selectedFont, setSelectedFont] = useState('Arial'); // Default font
     const [textX, setTextX] = useState(0); // X-coordinate for text placement
     const [textY, setTextY] = useState(0); // Y-coordinate for text placement
-    const [fontSize, setFontSize] = useState(16); // Default font size
+    const [fontSize, setFontSize] = useState(40); // Default font size
     const [textColor, setTextColor] = useState('#FFFFFF'); // Default white color
     const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
     const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
@@ -164,6 +164,8 @@ const ThumbnailGenerator = () => {
         }
     };
 
+    console.log(textRotation); // Should log the updated rotation value when the slider is moved
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -199,7 +201,7 @@ const ThumbnailGenerator = () => {
                 />
                 <input
                     type="range"
-                    min="20"
+                    min="40"
                     max="400"
                     value={fontSize}
                     onChange={(e) => setFontSize(e.target.value)}
@@ -297,24 +299,21 @@ const ThumbnailGenerator = () => {
                                 <div
                                     style={{
                                         position: 'absolute',
-                                        left: 0,
-                                        top: 0,
+                                        left: `${textX}px`,
+                                        top: `${textY}px`,
                                         color: textColor,
                                         fontFamily: selectedFont,
                                         fontSize: `${fontSize}px`,
                                         cursor: 'move',
-                                        // Apply rotation and translation together
-                                        transform: `translate(${textX}px, ${textY}px) rotate(${textRotation}deg)`,
-                                        transformOrigin: 'center',
-                                        textShadow: textShadow ? '2px 2px 4px rgba(0, 0, 0, 0.5)' : '',
-                                        // Apply text-stroke if textOutline is true
+                                        transform: `rotate(${textRotation}deg)`, // Apply rotation
+                                        transformOrigin: 'center center', // Ensures rotation around the center
+                                        textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
                                         WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
                                     }}
                                 >
                                     {tnText}
                                 </div>
-                            </Draggable>
-                        </div>
+                            </Draggable>                        </div>
                     ))}
                 </div>
             )}
