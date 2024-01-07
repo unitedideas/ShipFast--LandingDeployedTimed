@@ -164,7 +164,11 @@ const ThumbnailGenerator = () => {
         }
     };
 
-    console.log(textRotation); // Should log the updated rotation value when the slider is moved
+
+    const handleSliderChange = (e) => {
+        const newRotation = e.target.value;
+        window.requestAnimationFrame(() => setTextRotation(newRotation));
+    };
 
     return (
         <div>
@@ -305,7 +309,7 @@ const ThumbnailGenerator = () => {
                                         fontFamily: selectedFont,
                                         fontSize: `${fontSize}px`,
                                         cursor: 'move',
-                                        transform: `rotate(${textRotation}deg)`, // Apply rotation
+                                        WebkitTransform:`rotate(${textRotation}deg)`, // Apply rotation
                                         transformOrigin: 'center center', // Ensures rotation around the center
                                         textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
                                         WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
