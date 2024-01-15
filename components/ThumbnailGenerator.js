@@ -42,6 +42,22 @@ const ThumbnailGenerator = () => {
         });
     }
 
+    function drawTextAlongArc(context, str, centerX, centerY, radius, angle) {
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(-1 * angle / 2);
+        context.rotate(-1 * (angle / str.length) / 2);
+        for (var n = 0; n < str.length; n++) {
+            var char = str[n];
+            context.rotate(angle / str.length);
+            context.save();
+            context.translate(0, -1 * radius);
+            context.fillText(char, 0, 0);
+            context.restore();
+        }
+        context.restore();
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -207,8 +223,6 @@ const ThumbnailGenerator = () => {
                                     style={{
                                         position: 'absolute',
                                         cursor: 'move',
-                                        // left: 0,
-                                        // top: 0,
                                         display: 'flex', // Use flex to center the inner div
                                         justifyContent: 'center',
                                         alignItems: 'center',
