@@ -3,6 +3,7 @@ import {useRef, useState} from "react";
 import apiClient from "@/libs/api";
 import Image from "next/image";
 import Draggable from 'react-draggable';
+import html2canvas from 'html2canvas';
 
 
 const ThumbnailGenerator = () => {
@@ -31,104 +32,14 @@ const ThumbnailGenerator = () => {
 
 // Function to save the final image
     function saveFinalImage() {
-        // Check if window is defined to avoid issues with server-side rendering
-        if (typeof window !== "undefined") {
-            // Find the image element
-            const imageElement = document.querySelector('.thumbnail-item img');
-
-            // Create a new Image object using the window's Image constructor
-            const img = new window.Image();
-            img.src = imageElement.src;
-
-            // Ensure the image is loaded before drawing it on the canvas
-            img.onload = () => {
-                const finalImage = renderTextOnImage(
-                    img,
-                    tnText,
-                    textX,
-                    textY,
-                    selectedFont,
-                    textColor,
-                    textRotation,
-                    textShadow,
-                    textOutline,
-                    fontSize
-                );
-
-                // Create a canvas with the same dimensions as the image
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                // Get the canvas context
-                const ctx = canvas.getContext('2d');
-
-                // Draw the image onto the canvas
-                ctx.drawImage(img, 0, 0, img.width, img.height);
-
-                // Set the text properties
-                ctx.font = `${fontSize}px ${selectedFont}`;
-                ctx.fillStyle = 'white'; // Modify as needed
-                ctx.textBaseline = 'top'; // Adjusts vertical alignment
-                ctx.fillText(tnText, textX, textY);
-
-                // Convert the canvas to a data URL and download
-                const link = document.createElement('a');
-                link.download = 'thumbnail.png';
-                link.href = finalImage;
-                link.click();
-            };
-        }
-    }
-
-    // Function to render text on the image
-    function renderTextOnImage(image, text, x, y, font, color, rotation, shadow, outline, fontSize) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        // Set canvas size to image size
-        canvas.width = image.width;
-        canvas.height = image.height;
-
-        // Draw the image onto the canvas
-        ctx.drawImage(image, 0, 0);
-
-        // Set text properties
-        ctx.font = `${fontSize}px ${font}`;
-        ctx.fillStyle = color;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // Save context state
-        ctx.save();
-
-        // Translate and rotate context for text rotation
-        ctx.translate(x, y);
-        ctx.rotate(rotation * Math.PI / 180);
-
-        // Optional: Apply drop shadow
-        if (shadow) {
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-            ctx.shadowOffsetX = 4;
-            ctx.shadowOffsetY = 4;
-            ctx.shadowBlur = 2;
-        }
-
-        // Draw the text with optional outline
-        if (outline) {
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 1;
-            ctx.strokeText(text, 0, 0); // Draw the outline
-        }
-
-        // Draw the text
-        ctx.fillText(text, 0, 0);
-
-        // Restore context state to not affect the rest of the canvas
-        ctx.restore();
-
-        // Return the canvas as a data URL
-        return canvas.toDataURL('image/png');
+        const element = document.querySelector('.image-preview'); // Adjust the selector as needed
+        html2canvas(element, {scale: 1}).then(canvas => {
+            const base64image = canvas.toDataURL("image/png");
+            const link = document.createElement('a');
+            link.download = 'thumbnail.png';
+            link.href = base64image;
+            link.click();
+        });
     }
 
     const handleSubmit = async (e) => {
@@ -163,7 +74,9 @@ const ThumbnailGenerator = () => {
             setIsDisabled(false); // Re-enable the button after the operation is complete
         }
     };
-    
+
+    console.log("Current rotation: ", textRotation);
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
