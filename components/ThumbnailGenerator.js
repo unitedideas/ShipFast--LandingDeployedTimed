@@ -56,8 +56,6 @@ const ThumbnailGenerator = () => {
                 subject,
             });
 
-            console.log("response", response);
-
             if (response.thumbnail.data && response.thumbnail.data.length > 0) {
                 // Map through the data array and set images in the state
                 const imageList = response.thumbnail.data.map((item) => item.b64_json);
@@ -74,8 +72,6 @@ const ThumbnailGenerator = () => {
             setIsDisabled(false); // Re-enable the button after the operation is complete
         }
     };
-
-    console.log("Current rotation: ", textRotation);
 
     return (
         <div>
@@ -210,19 +206,29 @@ const ThumbnailGenerator = () => {
                                 <div
                                     style={{
                                         position: 'absolute',
-                                        left: `${textX}px`,
-                                        top: `${textY}px`,
-                                        color: textColor,
-                                        fontFamily: selectedFont,
-                                        fontSize: `${fontSize}px`,
                                         cursor: 'move',
-                                        WebkitTransform:`rotate(${textRotation}deg)`, // Apply rotation
-                                        transformOrigin: 'center center', // Ensures rotation around the center
-                                        textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
-                                        WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
+                                        // left: 0,
+                                        // top: 0,
+                                        display: 'flex', // Use flex to center the inner div
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: '0', // Collapse the parent div to a point
+                                        height: '0', // Collapse the parent div to a point
                                     }}
                                 >
-                                    {tnText}
+                                    <div
+                                        style={{
+                                            color: textColor,
+                                            fontFamily: selectedFont,
+                                            fontSize: `${fontSize}px`,
+                                            transform: `rotate(${textRotation}deg)`,
+                                            transformOrigin: 'center center',
+                                            textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
+                                            WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
+                                        }}
+                                    >
+                                        {tnText}
+                                    </div>
                                 </div>
                             </Draggable>
                         </div>
