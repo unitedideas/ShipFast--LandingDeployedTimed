@@ -163,13 +163,7 @@ const ThumbnailGenerator = () => {
             setIsDisabled(false); // Re-enable the button after the operation is complete
         }
     };
-
-
-    const handleSliderChange = (e) => {
-        const newRotation = e.target.value;
-        window.requestAnimationFrame(() => setTextRotation(newRotation));
-    };
-
+    
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -317,7 +311,8 @@ const ThumbnailGenerator = () => {
                                 >
                                     {tnText}
                                 </div>
-                            </Draggable>                        </div>
+                            </Draggable>
+                        </div>
                     ))}
                 </div>
             )}
