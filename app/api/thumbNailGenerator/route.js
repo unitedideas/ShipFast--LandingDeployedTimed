@@ -7,7 +7,6 @@ const openAI = new OpenAI();
 // This route is used to store the leads that are generated from the landing page.
 // The API call is initiated by <ButtonLead /> component
 export async function POST(req) {
-    await console.log("in the post call");
     const body = await req.json();
 
     const genBody = {
@@ -18,8 +17,8 @@ export async function POST(req) {
         quality: "standard",
         // quality: "hd",
         size: "1792x1024",
-        // style: "natural",
-        style: "vivid",
+        style: "natural",
+        // style: "vivid",
         response_format: "b64_json",
     }
 

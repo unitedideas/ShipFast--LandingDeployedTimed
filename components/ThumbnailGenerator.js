@@ -8,10 +8,10 @@ import html2canvas from 'html2canvas';
 
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
-    const [sceneDescription, setSceneDescription] = useState("");
-    const [artStyle, setArtStyle] = useState("");
-    const [subject, setSubject] = useState("");
-    const [tnText, settnText] = useState("");
+    const [sceneDescription, setSceneDescription] = useState("Mountains, pines, creek, and a cabin");
+    const [artStyle, setArtStyle] = useState("Bob Ross");
+    const [subject, setSubject] = useState("Basenji");
+    const [tnText, settnText] = useState("Bob Ross");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -33,29 +33,23 @@ const ThumbnailGenerator = () => {
 // Function to save the final image
     function saveFinalImage() {
         const element = document.querySelector('.image-preview'); // Adjust the selector as needed
-        html2canvas(element, {scale: 1}).then(canvas => {
+
+        html2canvas(element, {
+            scale: 1,
+            logging: true, // Enables logging for debugging purposes
+            onclone: (document) => {
+                const cloneElement = document.querySelector('.image-preview');
+                // Set the size explicitly if needed
+                cloneElement.style.width = `1280px`;
+                cloneElement.style.height = `720px`;
+            }
+        }).then(canvas => {
             const base64image = canvas.toDataURL("image/png");
             const link = document.createElement('a');
             link.download = 'thumbnail.png';
             link.href = base64image;
             link.click();
         });
-    }
-
-    function drawTextAlongArc(context, str, centerX, centerY, radius, angle) {
-        context.save();
-        context.translate(centerX, centerY);
-        context.rotate(-1 * angle / 2);
-        context.rotate(-1 * (angle / str.length) / 2);
-        for (var n = 0; n < str.length; n++) {
-            var char = str[n];
-            context.rotate(angle / str.length);
-            context.save();
-            context.translate(0, -1 * radius);
-            context.fillText(char, 0, 0);
-            context.restore();
-        }
-        context.restore();
     }
 
     const handleSubmit = async (e) => {
