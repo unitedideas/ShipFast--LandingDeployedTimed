@@ -23,6 +23,8 @@ const ThumbnailGenerator = () => {
     const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
     const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
+    const width = 1280;
+    const height = 720;
 
     // Function to handle font selection
     function handleFontChange(event) {
@@ -40,8 +42,8 @@ const ThumbnailGenerator = () => {
             onclone: (document) => {
                 const cloneElement = document.querySelector('.image-preview');
                 // Set the size explicitly if needed
-                cloneElement.style.width = `1280px`;
-                cloneElement.style.height = `720px`;
+                cloneElement.style.width = `${width}px`;
+                cloneElement.style.height = `${height}px`;
             }
         }).then(canvas => {
             const base64image = canvas.toDataURL("image/png");
@@ -198,7 +200,7 @@ const ThumbnailGenerator = () => {
                 <div className="image-preview">
                     {base64Image.map((imageData, index) => (
                         <div key={index} className="thumbnail-item"
-                             style={{position: 'relative', width: 1280, height: 720}}>
+                             style={{position: 'relative', width: width, height: height}}>
                             <Image
                                 src={`data:image/png;base64,${imageData}`}
                                 alt={`Generated Thumbnail ${index + 1}`}
@@ -207,7 +209,7 @@ const ThumbnailGenerator = () => {
                             />
                             <Draggable
                                 bounds="parent"
-                                position={{ x: textX, y: textY }}
+                                position={{x: textX, y: textY}}
                                 onDrag={(e, data) => {
                                     setTextX(data.x);
                                     setTextY(data.y);

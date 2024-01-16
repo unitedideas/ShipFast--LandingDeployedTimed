@@ -11,14 +11,14 @@ export async function POST(req) {
 
     const genBody = {
         model: "dall-e-3",
-        prompt: `Style: ${body.artStyle}.
-        Scene/Theme: ${body.sceneDescription}.
-        Main subject of the scene: ${body.subject}.`,
+        prompt: `In the style of: ${body.artStyle}.
+        The Scene/Theme is: ${body.sceneDescription}.
+        Main subject of the scene is: ${body.subject}.`,
         quality: "standard",
         // quality: "hd",
         size: "1792x1024",
-        style: "natural",
-        // style: "vivid",
+        // style: "natural",
+        style: "vivid",
         response_format: "b64_json",
     }
 
