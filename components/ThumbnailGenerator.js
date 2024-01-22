@@ -7,7 +7,10 @@ import html2canvas from 'html2canvas';
 
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
-    const [tnText, settnText] = useState("Bob Ross");
+    const [artStyle, setArtStyle] = useState("Bob Ross");
+    const [sceneDescription, setSceneDescription] = useState("Mountains, pines, creek, and a cabin");
+    const [subject, setSubject] = useState("Basenji");
+    const [tnText, settnText] = useState("");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -20,10 +23,6 @@ const ThumbnailGenerator = () => {
     const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
 
-
-    const sceneDescription = "Snow covered mountains leading down to a river"
-    const artStyle = "Modern Digital"
-    const subject = "Basenji"
     const width = 1280;
     const height = 720;
 
@@ -91,15 +90,18 @@ const ThumbnailGenerator = () => {
         <section
             className="max-w-7xl mx-auto bg-base-100 flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-20 px-8 py-8 lg:py-20">
             <div
-                className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
+                className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center">
                 <div>
                     <form onSubmit={handleSubmit}>
-                        <h1 className="text-xl font-bold mb-4">Generate YouTube Thumbnail</h1>
-                        <p className="text-sm text-gray-500 mb-4">
+                        <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight md:-mb-4">
+                            Youtube Thumbnail Generator
+                        </h1>
+                        <br/>
+                        <p className="text-lg opacity-80 leading-relaxed">
                             This example uses the OpenAI API to generate a YouTube thumbnail based on a description
-                            of the scene
-                            and the art style.
+                            of the scene and the art style.
                         </p>
+                        <br/>
 
                         <input
                             required
@@ -107,6 +109,7 @@ const ThumbnailGenerator = () => {
                             value={artStyle}
                             placeholder="Image Type Example: photograph, illustration, drawing, oil painting"
                             className="input input-bordered w-full placeholder:opacity-40"
+                            onChange={(e) => setArtStyle(e.target.value)}
                         />
                         <input
                             required
@@ -114,6 +117,7 @@ const ThumbnailGenerator = () => {
                             value={sceneDescription}
                             placeholder="Setting/Scene: Quick description of the environment"
                             className="input input-bordered w-full placeholder:opacity-40"
+                            onChange={(e) => setSceneDescription(e.target.value)}
                         />
                         <input
                             required
@@ -121,44 +125,63 @@ const ThumbnailGenerator = () => {
                             value={subject}
                             placeholder="Main Subjects: Describe the main characters or objects in the scene"
                             className="input input-bordered w-full placeholder:opacity-40"
+                            onChange={(e) => setSubject(e.target.value)}
                         />
-                        <input
-                            type="range"
-                            min="40"
-                            max="400"
-                            value={fontSize}
-                            onChange={(e) => setFontSize(e.target.value)}
-                            className="slider"
-                        />
-                        <h4 className="text-sm text-gray-500 mb-4">Let the image render and then you can place and
-                            save the text
-                            position.</h4>
-                        Font Size: {fontSize}
-                        <input
-                            required
-                            type="text"
-                            value={tnText}
-                            placeholder="Title Text"
-                            className="input input-bordered w-full placeholder:opacity-40"
-                            onChange={(e) => settnText(e.target.value)}
-                        />
-                        {/* Text Color Picker */}
-                        <input
-                            type="color"
-                            value={textColor}
-                            onChange={(e) => setTextColor(e.target.value)}
-                            className="input input-bordered"
-                        />
+                        <br/>
+                        <p>
+                            <div>
+                                <h4 className="text-sm text-gray-500 mb-4">Let the image render and then you can place
+                                    and
+                                    save the text
+                                    position.
+                                </h4>
+                            </div>
+                            <input
+                                type="range"
+                                min="40"
+                                max="200"
+                                value={fontSize}
+                                onChange={(e) => setFontSize(e.target.value)}
+                                className="slider"
+                            />
+                        </p>
+                        <p>
+                            <div>Font Size: {fontSize}</div>
+                            <input
+                                type="text"
+                                value={tnText}
+                                placeholder="Title Text"
+                                className="input input-bordered w-full placeholder:opacity-40"
+                                onChange={(e) => settnText(e.target.value)}
+                            />
+                        </p>
+                        <p>
+                            <br/>
+                            {/* Text Color Picker */}
+                            <div>Text Color: {textColor}</div>
 
-                        {/* Text Rotation Slider */}
-                        <input
-                            type="range"
-                            min="0"
-                            max="360"
-                            value={textRotation}
-                            onChange={(e) => setTextRotation(e.target.value)}
-                            className="slider"
-                        />
+                            <input
+                                type="color"
+                                value={textColor}
+                                onChange={(e) => setTextColor(e.target.value)}
+                                className="input input-bordered w-full placeholder:opacity-40"
+                            />
+
+                        </p>
+                        <br/>
+                        <p>
+                            {/* Text Rotation Slider */}
+                            <input
+                                type="range"
+                                min="0"
+                                max="360"
+                                value={textRotation}
+                                onChange={(e) => setTextRotation(e.target.value)}
+                                className="slider"
+                            />
+
+                            <div>Text Angle: {textRotation}</div>
+                        </p>
 
                         {/* Drop Shadow Toggle */}
                         <label className="label cursor-pointer">
