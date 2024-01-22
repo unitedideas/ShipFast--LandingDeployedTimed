@@ -5,12 +5,8 @@ import Image from "next/image";
 import Draggable from 'react-draggable';
 import html2canvas from 'html2canvas';
 
-
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
-    const [sceneDescription, setSceneDescription] = useState("Mountains, pines, creek, and a cabin");
-    const [artStyle, setArtStyle] = useState("Bob Ross");
-    const [subject, setSubject] = useState("Basenji");
     const [tnText, settnText] = useState("Bob Ross");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +19,11 @@ const ThumbnailGenerator = () => {
     const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
     const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
+
+
+    const sceneDescription = "Snow covered mountains leading down to a river"
+    const artStyle = "Modern Digital"
+    const subject = "Basenji"
     const width = 1280;
     const height = 720;
 
@@ -85,169 +86,189 @@ const ThumbnailGenerator = () => {
         }
     };
 
+
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <h1 className="text-xl font-bold mb-4">Generate YouTube Thumbnail</h1>
-                <p className="text-sm text-gray-500 mb-4">
-                    This example uses the OpenAI API to generate a YouTube thumbnail based on a description of the scene
-                    and the art style.
-                </p>
+        <section
+            className="max-w-7xl mx-auto bg-base-100 flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-20 px-8 py-8 lg:py-20">
+            <div
+                className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
+                <div>
+                    <form onSubmit={handleSubmit}>
+                        <h1 className="text-xl font-bold mb-4">Generate YouTube Thumbnail</h1>
+                        <p className="text-sm text-gray-500 mb-4">
+                            This example uses the OpenAI API to generate a YouTube thumbnail based on a description
+                            of the scene
+                            and the art style.
+                        </p>
 
-                <input
-                    required
-                    type="text"
-                    value={artStyle}
-                    placeholder="Image Type Example: photograph, illustration, drawing, oil painting"
-                    className="input input-bordered w-full placeholder:opacity-40"
-                    onChange={(e) => setArtStyle(e.target.value)}
-                />
-                <input
-                    required
-                    type="text"
-                    value={sceneDescription}
-                    placeholder="Setting/Scene: Quick description of the environment"
-                    className="input input-bordered w-full placeholder:opacity-40"
-                    onChange={(e) => setSceneDescription(e.target.value)}
-                />
-                <input
-                    required
-                    type="text"
-                    value={subject}
-                    placeholder="Main Subjects: Describe the main characters or objects in the scene"
-                    className="input input-bordered w-full placeholder:opacity-40"
-                    onChange={(e) => setSubject(e.target.value)}
-                />
-                <input
-                    type="range"
-                    min="40"
-                    max="400"
-                    value={fontSize}
-                    onChange={(e) => setFontSize(e.target.value)}
-                    className="slider"
-                />
-                <h4 className="text-sm text-gray-500 mb-4">Let the image render and then you can place and save the text
-                    position.</h4>
-                Font Size: {fontSize}
-                <input
-                    required
-                    type="text"
-                    value={tnText}
-                    placeholder="Title Text"
-                    className="input input-bordered w-full placeholder:opacity-40"
-                    onChange={(e) => settnText(e.target.value)}
-                />
-                {/* Text Color Picker */}
-                <input
-                    type="color"
-                    value={textColor}
-                    onChange={(e) => setTextColor(e.target.value)}
-                    className="input input-bordered"
-                />
+                        <input
+                            required
+                            type="text"
+                            value={artStyle}
+                            placeholder="Image Type Example: photograph, illustration, drawing, oil painting"
+                            className="input input-bordered w-full placeholder:opacity-40"
+                        />
+                        <input
+                            required
+                            type="text"
+                            value={sceneDescription}
+                            placeholder="Setting/Scene: Quick description of the environment"
+                            className="input input-bordered w-full placeholder:opacity-40"
+                        />
+                        <input
+                            required
+                            type="text"
+                            value={subject}
+                            placeholder="Main Subjects: Describe the main characters or objects in the scene"
+                            className="input input-bordered w-full placeholder:opacity-40"
+                        />
+                        <input
+                            type="range"
+                            min="40"
+                            max="400"
+                            value={fontSize}
+                            onChange={(e) => setFontSize(e.target.value)}
+                            className="slider"
+                        />
+                        <h4 className="text-sm text-gray-500 mb-4">Let the image render and then you can place and
+                            save the text
+                            position.</h4>
+                        Font Size: {fontSize}
+                        <input
+                            required
+                            type="text"
+                            value={tnText}
+                            placeholder="Title Text"
+                            className="input input-bordered w-full placeholder:opacity-40"
+                            onChange={(e) => settnText(e.target.value)}
+                        />
+                        {/* Text Color Picker */}
+                        <input
+                            type="color"
+                            value={textColor}
+                            onChange={(e) => setTextColor(e.target.value)}
+                            className="input input-bordered"
+                        />
 
-                {/* Text Rotation Slider */}
-                <input
-                    type="range"
-                    min="0"
-                    max="360"
-                    value={textRotation}
-                    onChange={(e) => setTextRotation(e.target.value)}
-                    className="slider"
-                />
+                        {/* Text Rotation Slider */}
+                        <input
+                            type="range"
+                            min="0"
+                            max="360"
+                            value={textRotation}
+                            onChange={(e) => setTextRotation(e.target.value)}
+                            className="slider"
+                        />
 
-                {/* Drop Shadow Toggle */}
-                <label className="label cursor-pointer">
-                    <span className="label-text">Drop Shadow</span>
-                    <input
-                        type="checkbox"
-                        checked={textShadow}
-                        onChange={(e) => setTextShadow(e.target.checked)}
-                        className="toggle"
-                    />
-                </label>
-
-                {/* Text Outline Toggle */}
-                <label className="label cursor-pointer">
-                    <span className="label-text">Text Outline</span>
-                    <input
-                        type="checkbox"
-                        checked={textOutline}
-                        onChange={(e) => setTextOutline(e.target.checked)}
-                        className="toggle"
-                    />
-                </label>
-                <select value={selectedFont} onChange={handleFontChange} className="input input-bordered w-full mb-4">
-                    <option value="Arial">Arial</option>
-                    <option value="Verdana">Verdana</option>
-                    {/* Add more font options here */}
-                </select>
-
-                <button
-                    className="btn btn-primary btn-block"
-                    type="submit"
-                    disabled={isDisabled}
-                >
-                    {isLoading ? (
-                        <span className="loading loading-spinner loading-xs"></span>
-                    ) : (
-                        "Generate Thumbnail"
-                    )}
-                </button>
-            </form>
-
-            {/*display the array of images*/}
-            {Array.isArray(base64Image) && base64Image.length > 0 && (
-                <div className="image-preview">
-                    {base64Image.map((imageData, index) => (
-                        <div key={index} className="thumbnail-item"
-                             style={{position: 'relative', width: width, height: height}}>
-                            <Image
-                                src={`data:image/png;base64,${imageData}`}
-                                alt={`Generated Thumbnail ${index + 1}`}
-                                layout="fill"
-                                objectFit="contain"
+                        {/* Drop Shadow Toggle */}
+                        <label className="label cursor-pointer">
+                            <span className="label-text">Drop Shadow</span>
+                            <input
+                                type="checkbox"
+                                checked={textShadow}
+                                onChange={(e) => setTextShadow(e.target.checked)}
+                                className="toggle"
                             />
-                            <Draggable
-                                bounds="parent"
-                                position={{x: textX, y: textY}}
-                                onDrag={(e, data) => {
-                                    setTextX(data.x);
-                                    setTextY(data.y);
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        cursor: 'move',
-                                        display: 'flex', // Use flex to center the inner div
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        width: '0', // Collapse the parent div to a point
-                                        height: '0', // Collapse the parent div to a point
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            color: textColor,
-                                            fontFamily: selectedFont,
-                                            fontSize: `${fontSize}px`,
-                                            transform: `rotate(${textRotation}deg)`,
-                                            transformOrigin: 'center center',
-                                            textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
-                                            WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
+                        </label>
+
+                        {/* Text Outline Toggle */}
+                        <label className="label cursor-pointer">
+                            <span className="label-text">Text Outline</span>
+                            <input
+                                type="checkbox"
+                                checked={textOutline}
+                                onChange={(e) => setTextOutline(e.target.checked)}
+                                className="toggle"
+                            />
+                        </label>
+                        <select value={selectedFont} onChange={handleFontChange}
+                                className="input input-bordered w-full mb-4">
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                            {/* Add more font options here */}
+                        </select>
+
+                        <button
+                            className="btn btn-primary btn-block"
+                            type="submit"
+                            disabled={isDisabled}
+                        >
+                            {isLoading ? (
+                                <span className="loading loading-spinner loading-xs"></span>
+                            ) : (
+                                "Generate Thumbnail"
+                            )}
+                        </button>
+                    </form>
+
+                    <br/>
+
+                    {/*display the array of images*/}
+                    {Array.isArray(base64Image) && base64Image.length > 0 && (
+                        <div className="image-preview">
+                            {base64Image.map((imageData, index) => (
+                                <div key={index} className="thumbnail-item"
+                                     style={{position: 'relative', width: width, height: height}}>
+                                    <Image
+                                        src={`data:image/png;base64,${imageData}`}
+                                        alt={`Generated Thumbnail ${index + 1}`}
+                                        width={width}
+                                        height={height}
+                                        layout="responsive"
+                                        objectFit="contain"
+                                    />
+                                    <Draggable
+                                        bounds="parent"
+                                        position={{x: textX, y: textY}}
+                                        onDrag={(e, data) => {
+                                            setTextX(data.x);
+                                            setTextY(data.y);
                                         }}
                                     >
-                                        {tnText}
-                                    </div>
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                cursor: 'move',
+                                                display: 'flex', // Use flex to center the inner div
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                width: '0', // Collapse the parent div to a point
+                                                height: '0', // Collapse the parent div to a point
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    color: textColor,
+                                                    fontFamily: selectedFont,
+                                                    fontSize: `${fontSize}px`,
+                                                    transform: `rotate(${textRotation}deg)`,
+                                                    transformOrigin: 'center center',
+                                                    textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
+                                                    WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
+                                                }}
+                                            >
+                                                {tnText}
+                                            </div>
+                                        </div>
+                                    </Draggable>
                                 </div>
-                            </Draggable>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            )}
+                    )}
 
-            <button onClick={saveFinalImage} className="btn btn-secondary mt-4">Save Thumbnail</button>
-        </div>
+                    <br/>
+
+                    <button
+                        onClick={saveFinalImage}
+                        className="btn btn-primary btn-block"
+                    >
+                        Save Thumbnail
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
     );
 };
 
