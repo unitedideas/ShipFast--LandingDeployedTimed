@@ -23,8 +23,10 @@ const ThumbnailGenerator = () => {
     const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
 
-    const width = 1280;
-    const height = 720;
+    // const width = 1280;
+    // const height = 720;
+    const width = 1920;
+    const height = 1080;
 
     // Function to handle font selection
     function handleFontChange(event) {
@@ -36,12 +38,25 @@ const ThumbnailGenerator = () => {
     function saveFinalImage() {
         const element = document.getElementById('the-whole-thing');
 
-        domtoimage.toPng(element)
-            .then(function (dataUrl) {
+        domtoimage.toBlob(element, {
+            width: width,
+            height: height,
+            style: {
+                'transform': 'scale(' + (width / element.offsetWidth) + ')',
+                'transform-origin': 'top left',
+                'width': element.offsetWidth + 'px',
+                'height': element.offsetHeight + 'px'
+            }
+        })
+            .then(function (blob) {
+                // Create a Blob link to download
+                const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = 'thumbnail.png';
-                link.href = dataUrl;
+                link.href = url;
                 link.click();
+                // Clean up the URL object
+                URL.revokeObjectURL(url);
             })
             .catch(function (error) {
                 console.error('oops, something went wrong!', error);
@@ -129,7 +144,7 @@ const ThumbnailGenerator = () => {
                             <label
                                 htmlFor="mainSubject"
                                 className="block text-md font-medium mr-2">
-                                Main Subject:
+                                Title Text:
                             </label>
                             <input
                                 required

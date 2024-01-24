@@ -4,7 +4,6 @@ import axios from "axios";
 export const sendOpenAi = async (messages, userId, max = 100, temp = 1) => {
     const url = "https://api.openai.com/v1/chat/completions";
 
-    console.log("Ask GPT >>>");
     messages.map((m) =>
         console.log(" - " + m.role.toUpperCase() + ": " + m.content)
     );
@@ -40,7 +39,6 @@ export const sendOpenAi = async (messages, userId, max = 100, temp = 1) => {
             usage?.completion_tokens +
             ")"
         );
-        console.log("\n");
 
         return answer;
     } catch (e) {
