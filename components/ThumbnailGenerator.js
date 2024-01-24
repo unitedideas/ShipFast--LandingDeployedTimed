@@ -22,6 +22,7 @@ const ThumbnailGenerator = () => {
     const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
     const [textShadow, setTextShadow] = useState(false); // Drop shadow toggle
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
+    const [showTextSection, setShowTextSection] = useState(false);
 
     // const width = 1280;
     // const height = 720;
@@ -81,6 +82,9 @@ const ThumbnailGenerator = () => {
                 // Map through the data array and set images in the state
                 const imageList = response.thumbnail.data.map((item) => item.b64_json);
                 setBase64Image(imageList);
+                setShowTextSection(true); // Show text section if images are present
+            } else {
+                setShowTextSection(false); // Hide text section if no images
             }
 
             // Reset the form fields and remove focus
@@ -171,185 +175,192 @@ const ThumbnailGenerator = () => {
                             )}
                         </button>
 
-                        <div className="flex items-center mb-4">
-                            <label
-                                htmlFor="tnText"
-                                className="block text-md font-medium mr-2">
-                                Main Subject:
-                            </label>
-                            <input
-                                id="tnText"
-                                type="text"
-                                value={tnText}
-                                placeholder="Title Text"
-                                className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
-                                onChange={(e) => settnText(e.target.value)}
-                            />
-                        </div>
+
+                        {/*This section is for text creation*/}
+                        {showTextSection && (
+                            <div>
+                                <div className="flex items-center mb-4">
+                                    <label
+                                        htmlFor="tnText"
+                                        className="block text-md font-medium mr-2">
+                                        Main Subject:
+                                    </label>
+                                    <input
+                                        id="tnText"
+                                        type="text"
+                                        value={tnText}
+                                        placeholder="Title Text"
+                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
+                                        onChange={(e) => settnText(e.target.value)}
+                                    />
+                                </div>
 
 
-                        <div className="flex items-center mb-4">
-                            <label
-                                htmlFor="fontSize"
-                                className="block text-md font-medium mr-2">
-                                Font Size:
-                            </label>
-                            <input id="fontSize" type="range"
-                                   min="20"
-                                   max="200"
-                                   value={fontSize}
-                                   onChange={(e) => setFontSize(e.target.value)}
-                                   className="flex-1"
-                            />
-                        </div>
+                                <div className="flex items-center mb-4">
+                                    <label
+                                        htmlFor="fontSize"
+                                        className="block text-md font-medium mr-2">
+                                        Font Size:
+                                    </label>
+                                    <input id="fontSize" type="range"
+                                           min="20"
+                                           max="200"
+                                           value={fontSize}
+                                           onChange={(e) => setFontSize(e.target.value)}
+                                           className="flex-1"
+                                    />
+                                </div>
 
-                        <div className="flex items-center mb-4 rounded">
-                            <label
-                                htmlFor="textColor"
-                                className="block text-md font-medium mr-2">
-                                Text Color: {textColor}
-                            </label>
-                            <input id="textColor"
-                                   type="color"
-                                   value={textColor}
-                                   onChange={(e) => setTextColor(e.target.value)}
-                                   className="flex-1"
-                            />
-                        </div>
-
-
-                        {/* Text Rotation Slider */}
-                        <div className="flex items-center mb-4">
-                            <label
-                                htmlFor="textRotation"
-                                className="block text-md font-medium mr-2">
-                                Text Rotation: {textRotation}
-                            </label>
-                            <input
-                                id="textRotation"
-                                type="range"
-                                min="0"
-                                max="360"
-                                value={textRotation}
-                                onChange={(e) => setTextRotation(e.target.value)}
-                                className="flex-1"
-                            />
-                        </div>
+                                <div className="flex items-center mb-4 rounded">
+                                    <label
+                                        htmlFor="textColor"
+                                        className="block text-md font-medium mr-2">
+                                        Text Color: {textColor}
+                                    </label>
+                                    <input id="textColor"
+                                           type="color"
+                                           value={textColor}
+                                           onChange={(e) => setTextColor(e.target.value)}
+                                           className="flex-1"
+                                    />
+                                </div>
 
 
-                        {/* Drop Shadow Toggle */}
-                        <div className="flex items-center mb-4">
-                            <label
-                                htmlFor="textOutline"
-                                className="block text-md font-medium mr-2">
-                                Text Outline:
-                            </label>
-                            <input id="textOutline"
-                                   type={"checkbox"}
-                                   value={textOutline}
-                                   onChange={(e) => setTextOutline(e.target.value)}
-                                   className="toggle"
-                            />
-                        </div>
+                                <div className="flex items-center mb-4">
+                                    <label
+                                        htmlFor="textRotation"
+                                        className="block text-md font-medium mr-2">
+                                        Text Rotation: {textRotation}
+                                    </label>
+                                    <input
+                                        id="textRotation"
+                                        type="range"
+                                        min="0"
+                                        max="360"
+                                        value={textRotation}
+                                        onChange={(e) => setTextRotation(e.target.value)}
+                                        className="flex-1"
+                                    />
+                                </div>
 
-                        {/* Text Outline Toggle */}
 
-                        <div className="flex items-center mb-4">
-                            <label
-                                htmlFor="textShadow"
-                                className="block text-md font-medium mr-2">
-                                Text Drop Shadow:
-                            </label>
-                            <input id="textShadow"
-                                   type={"checkbox"}
-                                   value={textShadow}
-                                   onChange={(e) => setTextShadow(e.target.value)}
-                                   className="toggle"
-                            />
-                        </div>
+                                {/* Drop Shadow Toggle */}
+                                <div className="flex items-center mb-4">
+                                    <label
+                                        htmlFor="textOutline"
+                                        className="block text-md font-medium mr-2">
+                                        Text Outline:
+                                    </label>
+                                    <input id="textOutline"
+                                           type={"checkbox"}
+                                           value={textOutline}
+                                           onChange={(e) => setTextOutline(e.target.value)}
+                                           className="toggle"
+                                    />
+                                </div>
 
-                        <select
-                            value={selectedFont}
-                            onChange={handleFontChange}
-                            className="input input-bordered w-full mb-4">
-                            <option value="Impact">Impact</option>
-                            <option value="Helvetica">Helvetica Bold</option>
-                            <option value="Bebas Neue">Bebas Neue</option>
-                            <option value="Roboto">Roboto Bold</option>
-                            <option value="Anton">Anton</option>
-                            <option value="Montserrat">Montserrat</option>
-                            <option value="Playfair Display">Playfair Display</option>
-                            <option value="Futura">Futura Bold</option>
-                            <option value="Arial">Arial</option>
-                            <option value="Verdana">Verdana</option>
-                        </select>
+                                {/* Text Outline Toggle */}
+                                <div className="flex items-center mb-4">
+                                    <label
+                                        htmlFor="textShadow"
+                                        className="block text-md font-medium mr-2">
+                                        Text Drop Shadow:
+                                    </label>
+                                    <input id="textShadow"
+                                           type={"checkbox"}
+                                           value={textShadow}
+                                           onChange={(e) => setTextShadow(e.target.value)}
+                                           className="toggle"
+                                    />
+                                </div>
+
+                                <select
+                                    value={selectedFont}
+                                    onChange={handleFontChange}
+                                    className="input input-bordered w-full mb-4">
+                                    <option value="Impact">Impact</option>
+                                    <option value="Helvetica">Helvetica Bold</option>
+                                    <option value="Bebas Neue">Bebas Neue</option>
+                                    <option value="Roboto">Roboto Bold</option>
+                                    <option value="Anton">Anton</option>
+                                    <option value="Montserrat">Montserrat</option>
+                                    <option value="Playfair Display">Playfair Display</option>
+                                    <option value="Futura">Futura Bold</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Verdana">Verdana</option>
+                                </select>
+                            </div>
+                        )}
                     </div>
-
                 </form>
 
-                    {/*display the array of images*/}
-                    <div className="w-full relative" style={{paddingTop: '56.25%'}} id={'the-whole-thing'}>
-                        {Array.isArray(base64Image) && base64Image.length > 0 && (
-                            <div className="image-preview absolute top-0 left-0 right-0 bottom-0">
-                                {base64Image.map((imageData, index) => (
-                                    <div
-                                        key={index}
-                                        className="thumbnail-item absolute inset-0"
+                {/*display the array of images*/}
+                <div
+                    className="w-full relative"
+                    style={showTextSection ? {paddingTop: '56.25%'} : {}}
+                    id={'the-whole-thing'}
+                >
+                    {Array.isArray(base64Image) && base64Image.length > 0 && (
+                        <div className="image-preview absolute top-0 left-0 right-0 bottom-0">
+                            {base64Image.map((imageData, index) => (
+                                <div
+                                    key={index}
+                                    className="thumbnail-item absolute inset-0"
+                                >
+                                    <Image
+                                        src={`data:image/png;base64,${imageData}`}
+                                        alt={`Generated Thumbnail ${index + 1}`}
+                                        width={width}
+                                        height={height}
+                                        layout="responsive"
+                                        objectFit="contain"
+                                    />
+                                    <Draggable
+                                        bounds="parent"
+                                        position={{x: textX, y: textY}}
+                                        onDrag={(e, data) => {
+                                            setTextX(data.x);
+                                            setTextY(data.y);
+                                        }}
                                     >
-                                        <Image
-                                            src={`data:image/png;base64,${imageData}`}
-                                            alt={`Generated Thumbnail ${index + 1}`}
-                                            width={width}
-                                            height={height}
-                                            layout="responsive"
-                                            objectFit="contain"
-                                        />
-                                        <Draggable
-                                            bounds="parent"
-                                            position={{x: textX, y: textY}}
-                                            onDrag={(e, data) => {
-                                                setTextX(data.x);
-                                                setTextY(data.y);
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                cursor: 'move',
+                                                display: 'flex', // Use flex to center the inner div
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                width: '0', // Collapse the parent div to a point
+                                                height: '0', // Collapse the parent div to a point
                                             }}
                                         >
                                             <div
                                                 style={{
-                                                    position: 'absolute',
-                                                    cursor: 'move',
-                                                    display: 'flex', // Use flex to center the inner div
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    width: '0', // Collapse the parent div to a point
-                                                    height: '0', // Collapse the parent div to a point
+                                                    color: textColor,
+                                                    fontFamily: selectedFont,
+                                                    fontSize: `${fontSize}px`,
+                                                    transform: `rotate(${textRotation}deg)`,
+                                                    transformOrigin: 'center center',
+                                                    textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
+                                                    WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
                                                 }}
                                             >
-                                                <div
-                                                    style={{
-                                                        color: textColor,
-                                                        fontFamily: selectedFont,
-                                                        fontSize: `${fontSize}px`,
-                                                        transform: `rotate(${textRotation}deg)`,
-                                                        transformOrigin: 'center center',
-                                                        textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
-                                                        WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
-                                                    }}
-                                                >
-                                                    {tnText}
-                                                </div>
+                                                {tnText}
                                             </div>
-                                        </Draggable>
-                                    </div>
-                                ))}
-                            </div>
-                        )
-                        }
-                    </div>
+                                        </div>
+                                    </Draggable>
+                                </div>
+                            ))}
+                        </div>
+                    )
+                    }
+                </div>
 
-                    <button
-                        onClick={saveFinalImage}
-                        className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600">
-                        Save Your Awesome New Thumbnail!
-                    </button>
+                <button
+                    onClick={saveFinalImage}
+                    className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600">
+                    Save Your Awesome New Thumbnail!
+                </button>
             </div>
         </div>
     );
