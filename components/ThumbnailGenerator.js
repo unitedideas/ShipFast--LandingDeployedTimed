@@ -3,7 +3,7 @@ import {useRef, useState} from "react";
 import apiClient from "@/libs/api";
 import Image from "next/image";
 import Draggable from 'react-draggable';
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
@@ -34,23 +34,18 @@ const ThumbnailGenerator = () => {
 
 // Function to save the final image
     function saveFinalImage() {
-        const element = document.querySelector('.image-preview'); // Adjust the selector as needed
+        const element = document.getElementById('the-whole-thing');
 
-        html2canvas(element, {
-            logging: true, // Enables logging for debugging purposes
-            onclone: (document) => {
-                // const cloneElement = document.querySelector('.image-preview');
-                // // Set the size explicitly if needed
-                // cloneElement.style.width = ``;
-                // cloneElement.style.height = ``;
-            }
-        }).then(canvas => {
-            const base64image = canvas.toDataURL("image/png");
-            const link = document.createElement('a');
-            link.download = 'thumbnail.png';
-            link.href = base64image;
-            link.click();
-        });
+        domtoimage.toPng(element)
+            .then(function (dataUrl) {
+                const link = document.createElement('a');
+                link.download = 'thumbnail.png';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch(function (error) {
+                console.error('oops, something went wrong!', error);
+            });
     }
 
     const handleSubmit = async (e) => {
@@ -278,7 +273,7 @@ const ThumbnailGenerator = () => {
                 </form>
 
                     {/*display the array of images*/}
-                    <div className="w-full relative" style={{paddingTop: '56.25%'}}>
+                    <div className="w-full relative" style={{paddingTop: '56.25%'}} id={'the-whole-thing'}>
                         {Array.isArray(base64Image) && base64Image.length > 0 && (
                             <div className="image-preview absolute top-0 left-0 right-0 bottom-0">
                                 {base64Image.map((imageData, index) => (
