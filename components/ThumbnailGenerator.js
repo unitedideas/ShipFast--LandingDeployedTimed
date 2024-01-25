@@ -15,8 +15,12 @@ const ThumbnailGenerator = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [selectedFont, setSelectedFont] = useState('Arial'); // Default font
-    const [textX, setTextX] = useState(0); // X-coordinate for text placement
-    const [textY, setTextY] = useState(0); // Y-coordinate for text placement
+    const [textX, setTextX] = useState(335); // X-coordinate for text placement
+    const [textY, setTextY] = useState(-400); // Y-coordinate for text placement
+
+    // todo: use setTextX(element.offsetWidth / 2) and setTextY(element.offsetHeight * 0.1 * -1) to set the text correctly on different size canvases
+    // const [textX, setTextX] = useState(0); // X-coordinate for text placement
+    // const [textY, setTextY] = useState(0); // Y-coordinate for text placement
     const [fontSize, setFontSize] = useState(40); // Default font size
     const [textColor, setTextColor] = useState('#FFFFFF'); // Default white color
     const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
@@ -24,8 +28,6 @@ const ThumbnailGenerator = () => {
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
     const [showTextSection, setShowTextSection] = useState(false);
 
-    // const width = 1280;
-    // const height = 720;
     const width = 1920;
     const height = 1080;
 
@@ -33,7 +35,6 @@ const ThumbnailGenerator = () => {
     function handleFontChange(event) {
         setSelectedFont(event.target.value);
     }
-
 
 // Function to save the final image
     function saveFinalImage() {
@@ -98,83 +99,93 @@ const ThumbnailGenerator = () => {
         }
     };
 
-
     return (
         <div className={"bg-gray-900 text-white min-h-screen p-8"}>
             <div className={"max-w-2xl mx-auto"}>
 
-                <h1 className={"text-4xl font-bold mb-4"}>YouTube Thumbnail Generator</h1>
-                <p className={"text-lg opacity-80 mb-6"}>This example uses the OpenAI API to generate a YouTube
-                    thumbnail
-                    based on a description of the scene and the art style.</p>
+                <h1 className={"text-4xl font-bold mb-4 text-center"}>YouTube Thumbnail Generator (change to
+                    header)</h1>
 
-                <form
-                    onSubmit={handleSubmit}
-                >
+                <form onSubmit={handleSubmit}>
                     <div className={"bg-gray-800 p-6 rounded-lg shadow-lg"}>
-                        <div className={"flex items-center mb-4"}>
-                            <label
-                                htmlFor={"imageStyle"}
-                                className={"block text-md font-medium mr-2"}>
-                                Image Style:
-                            </label>
-                            <input
-                                required
-                                id={"imageStyle"}
-                                type={"text"}
-                                placeholder={"Sescribe the art style: watercolor, oil painting, photorealistic"}
-                                value={artStyle}
-                                className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
-                                onChange={(e) => setArtStyle(e.target.value)}
-                            />
-                        </div>
-                        <div className={"flex items-center mb-4"}>
-                            <label
-                                htmlFor={"sceneDescription"}
-                                className={"block text-md font-medium mr-2"}>
-                                Scene Description:
-                            </label>
-                            <input
-                                required
-                                id={"sceneDescription"}
-                                type={"text"}
-                                value={sceneDescription}
-                                placeholder={"Describe the scene: Sunny beach with puppies for clouds"}
-                                className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
-                                onChange={(e) => setSceneDescription(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex items-center mb-4">
-                            <label
-                                htmlFor="mainSubject"
-                                className="block text-md font-medium mr-2">
-                                Title Text:
-                            </label>
-                            <input
-                                required
-                                id="MainSubject"
-                                type="text"
-                                value={subject}
-                                placeholder="Describe the main characters or objects: Happy Puppies"
-                                className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
-                                onChange={(e) => setSubject(e.target.value)}
-                            />
-                        </div>
+                        {!showTextSection ? (
+                            <div>
+                                <div className={"flex items-center mb-4"}>
+                                    <label
+                                        htmlFor={"imageStyle"}
+                                        className={"block text-md font-medium mr-2"}>
+                                        Image Style:
+                                    </label>
+                                    <input
+                                        required
+                                        id={"imageStyle"}
+                                        type={"text"}
+                                        placeholder={"Sescribe the art style: watercolor, oil painting, photorealistic"}
+                                        value={artStyle}
+                                        className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
+                                        onChange={(e) => setArtStyle(e.target.value)}
+                                    />
+                                </div>
 
-                        <h4 className="text-sm text-gray-500 mb-4">*Note: You will be able to add text and a title after
-                            the image is created.</h4>
+                                <div className={"flex items-center mb-4"}>
+                                    <label
+                                        htmlFor={"sceneDescription"}
+                                        className={"block text-md font-medium mr-2"}>
+                                        Scene Description:
+                                    </label>
+                                    <input
+                                        required
+                                        id={"sceneDescription"}
+                                        type={"text"}
+                                        value={sceneDescription}
+                                        placeholder={"Describe the scene: Sunny beach with puppies for clouds"}
+                                        className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
+                                        onChange={(e) => setSceneDescription(e.target.value)}
+                                    />
+                                </div>
 
-                        <button
-                            className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600"
-                            disabled={isDisabled}
-                        >
-                            {isLoading ? (
-                                <span className="loading loading-spinner loading-xs"></span>
-                            ) : (
-                                "Generate Thumbnail"
-                            )}
-                        </button>
+                                <div className="flex items-center mb-4">
+                                    <label
+                                        htmlFor="mainSubject"
+                                        className="block text-md font-medium mr-2">
+                                        Title Text:
+                                    </label>
+                                    <input
+                                        required
+                                        id="MainSubject"
+                                        type="text"
+                                        value={subject}
+                                        placeholder="Describe the main characters or objects: Happy Puppies"
+                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
+                                        onChange={(e) => setSubject(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <p className={"text-lg opacity-80 mb-6 text-center"}>
+                                    Style:{artStyle},
+                                    Description:{sceneDescription},
+                                    Subject:{subject}
+                                </p>
+                            </div>
+                        )}
 
+                        <h4 className="text-sm text-gray-500 mb-4">
+                            *Note: You will be able to add text and a title after the image is created.
+                        </h4>
+
+                        {!showTextSection && (
+                            <button
+                                className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600"
+                                disabled={showTextSection}>
+                                {isLoading ? (
+                                    <span className="loading loading-spinner loading-xs"></span>
+                                ) : (
+                                    "Generate Thumbnail"
+                                )}
+                            </button>
+                        )}
 
                         {/*This section is for text creation*/}
                         {showTextSection && (
@@ -183,7 +194,7 @@ const ThumbnailGenerator = () => {
                                     <label
                                         htmlFor="tnText"
                                         className="block text-md font-medium mr-2">
-                                        Main Subject:
+                                        Title Text:
                                     </label>
                                     <input
                                         id="tnText"
@@ -194,7 +205,6 @@ const ThumbnailGenerator = () => {
                                         onChange={(e) => settnText(e.target.value)}
                                     />
                                 </div>
-
 
                                 <div className="flex items-center mb-4">
                                     <label
@@ -298,15 +308,13 @@ const ThumbnailGenerator = () => {
                 <div
                     className="w-full relative"
                     style={showTextSection ? {paddingTop: '56.25%'} : {}}
-                    id={'the-whole-thing'}
-                >
+                    id={'the-whole-thing'}>
                     {Array.isArray(base64Image) && base64Image.length > 0 && (
                         <div className="image-preview absolute top-0 left-0 right-0 bottom-0">
                             {base64Image.map((imageData, index) => (
                                 <div
                                     key={index}
-                                    className="thumbnail-item absolute inset-0"
-                                >
+                                    className="thumbnail-item absolute inset-0">
                                     <Image
                                         src={`data:image/png;base64,${imageData}`}
                                         alt={`Generated Thumbnail ${index + 1}`}
@@ -315,14 +323,18 @@ const ThumbnailGenerator = () => {
                                         layout="responsive"
                                         objectFit="contain"
                                     />
+                                    <button
+                                        onClick={saveFinalImage}
+                                        className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600">
+                                        Save Your Awesome New Thumbnail!
+                                    </button>
                                     <Draggable
                                         bounds="parent"
                                         position={{x: textX, y: textY}}
                                         onDrag={(e, data) => {
                                             setTextX(data.x);
                                             setTextY(data.y);
-                                        }}
-                                    >
+                                        }}>
                                         <div
                                             style={{
                                                 position: 'absolute',
@@ -332,8 +344,7 @@ const ThumbnailGenerator = () => {
                                                 alignItems: 'center',
                                                 width: '0', // Collapse the parent div to a point
                                                 height: '0', // Collapse the parent div to a point
-                                            }}
-                                        >
+                                            }}>
                                             <div
                                                 style={{
                                                     color: textColor,
@@ -352,15 +363,8 @@ const ThumbnailGenerator = () => {
                                 </div>
                             ))}
                         </div>
-                    )
-                    }
+                    )}
                 </div>
-
-                <button
-                    onClick={saveFinalImage}
-                    className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600">
-                    Save Your Awesome New Thumbnail!
-                </button>
             </div>
         </div>
     );
