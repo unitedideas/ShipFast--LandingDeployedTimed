@@ -126,7 +126,7 @@ console.log("selected", selected)
             <div className={"max-w-2xl mx-auto"}>
 
                 <div className={"p-5 rounded"}>
-                    <h1 className={"text-4xl font-bold text-center"}>Let's Get Creative!</h1>
+                    <h1 className={"text-4xl font-bold text-center"}>{"Let's Get Creative!"}</h1>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className={"bg-gray-800 p-6 rounded-lg shadow-lg"}>
