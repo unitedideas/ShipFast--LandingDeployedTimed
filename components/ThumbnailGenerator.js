@@ -4,19 +4,24 @@ import apiClient from "@/libs/api";
 import Image from "next/image";
 import Draggable from 'react-draggable';
 import domtoimage from 'dom-to-image';
+import imageType from "@/app/util/artTypeSelector";
+import fontSelector from "@/app/util/fontSelector";
+import artTypeSelector from "@/app/util/artTypeSelector";
 
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
-    const [artStyle, setArtStyle] = useState("");
     const [sceneDescription, setSceneDescription] = useState("");
     const [subject, setSubject] = useState("");
     const [tnText, settnText] = useState("");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [selectedFont, setSelectedFont] = useState('Arial'); // Default font
+    const [selectedFont, setSelectedFont] = useState(fontSelector[0].value);
     const [textX, setTextX] = useState(335); // X-coordinate for text placement
     const [textY, setTextY] = useState(-400); // Y-coordinate for text placement
+
+    const [artLabel, setArtLabel] = useState("");
+    const [selectedStyleValue, setSelectedStyleValue] = useState(artTypeSelector[0].value); // Default to the first option
 
     // todo: use setTextX(element.offsetWidth / 2) and setTextY(element.offsetHeight * 0.1 * -1) to set the text correctly on different size canvases
     // const [textX, setTextX] = useState(0); // X-coordinate for text placement
@@ -36,7 +41,23 @@ const ThumbnailGenerator = () => {
         setSelectedFont(event.target.value);
     }
 
-// Function to save the final image
+    const handleArtStyleChange = (e) => {
+        const value = e.target.value;
+        console.log("value", value);
+        setSelectedStyleValue(value);
+console.log("selectedOption", selectedStyleValue)
+        // Update artStyle based on the selection
+        const selected = imageType.find(option => option.value === value);
+console.log("selected", selected)
+        if (selected && selected.value !== 'userDescription') {
+            console.log("selected.label", selected.label)
+            setArtLabel(selected.label); // Set to predefined artStyle if not 'userDescription'
+        } else {
+            setArtLabel(''); // Reset or keep the user's input if 'userDescription'
+        }
+    };
+
+    // Function to save the final image
     function saveFinalImage() {
         const element = document.getElementById('the-whole-thing');
 
@@ -73,10 +94,11 @@ const ThumbnailGenerator = () => {
 
         try {
             // Perform the API call
+            console.log("selectedStyleValue",selectedStyleValue)
             const response = await apiClient.post("/thumbNailGenerator", {
-                sceneDescription,
-                artStyle,
                 subject,
+                sceneDescription,
+                selectedStyleValue,
             });
 
             if (response.thumbnail.data && response.thumbnail.data.length > 0) {
@@ -100,30 +122,34 @@ const ThumbnailGenerator = () => {
     };
 
     return (
-        <div className={"bg-gray-900 text-white min-h-screen p-8"}>
+        <div className={"bg-gray-900 text-white min-h-screen p-5"}>
             <div className={"max-w-2xl mx-auto"}>
 
-                <h1 className={"text-4xl font-bold mb-4 text-center"}>YouTube Thumbnail Generator (change to
-                    header)</h1>
-
+                <div className={"p-5 rounded"}>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <h1 className={"text-4xl font-bold text-center"}>Let's Get Creative!`</h1>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className={"bg-gray-800 p-6 rounded-lg shadow-lg"}>
                         {!showTextSection ? (
                             <div>
-                                <div className={"flex items-center mb-4"}>
+                                {/*<h4 className="text-sm text-gray-500 mb-4">*/}
+                                {/*    *Note: You will be able to add text and a title after the image is created.*/}
+                                {/*</h4>*/}
+                                <div className="flex items-center mb-4">
                                     <label
-                                        htmlFor={"imageStyle"}
-                                        className={"block text-md font-medium mr-2"}>
-                                        Image Style:
+                                        htmlFor="mainSubject"
+                                        className="block text-md font-medium mr-2">
+                                        Main Subject:
                                     </label>
                                     <input
                                         required
-                                        id={"imageStyle"}
-                                        type={"text"}
-                                        placeholder={"Sescribe the art style: watercolor, oil painting, photorealistic"}
-                                        value={artStyle}
-                                        className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
-                                        onChange={(e) => setArtStyle(e.target.value)}
+                                        id="MainSubject"
+                                        type="text"
+                                        value={subject}
+                                        placeholder="Describe the main characters or objects: Happy Puppies"
+                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
+                                        onChange={(e) => setSubject(e.target.value)}
                                     />
                                 </div>
 
@@ -144,40 +170,60 @@ const ThumbnailGenerator = () => {
                                     />
                                 </div>
 
-                                <div className="flex items-center mb-4">
+                                <div className={"flex items-center mb-4"}>
                                     <label
-                                        htmlFor="mainSubject"
-                                        className="block text-md font-medium mr-2">
-                                        Title Text:
+                                        htmlFor={"sceneDescription"}
+                                        className={"block text-md font-medium mr-2"}>
+                                        Select Artistic Style:
                                     </label>
-                                    <input
-                                        required
-                                        id="MainSubject"
-                                        type="text"
-                                        value={subject}
-                                        placeholder="Describe the main characters or objects: Happy Puppies"
-                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
-                                        onChange={(e) => setSubject(e.target.value)}
-                                    />
+                                    <select
+                                        id={"artStyleSelect"}
+                                        value={selectedStyleValue}
+                                        onChange={handleArtStyleChange}
+                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600">
+                                        {imageType.map(option => (
+                                            <option value={option.value} key={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+
+
+                                {selectedStyleValue === 'userDescription' &&
+                                    (<div className={"flex items-center mb-4"}>
+                                            <label
+                                                htmlFor={"imageStyle"}
+                                                className={"block text-md font-medium mr-2"}>
+                                                Artistic Style:
+                                            </label>
+                                            <input
+                                                required
+                                                id={"imageStyle"}
+                                                type={"text"}
+                                                placeholder={"Describe the art style: watercolor, oil painting, photorealistic"}
+                                                value={setArtLabel}
+                                                className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
+                                                onChange={(e) => setSelectedStyleValue(e.target.value)}
+                                            />
+                                        </div>
+                                    )
+                                }
                             </div>
                         ) : (
                             <div>
                                 <p className={"text-lg opacity-80 mb-6 text-center"}>
-                                    Style:{artStyle},
+                                    Style:{artLabel},
                                     Description:{sceneDescription},
                                     Subject:{subject}
                                 </p>
                             </div>
                         )}
 
-                        <h4 className="text-sm text-gray-500 mb-4">
-                            *Note: You will be able to add text and a title after the image is created.
-                        </h4>
-
                         {!showTextSection && (
+
                             <button
-                                className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600"
+                                className="btn-gradient btn w-full p-3 rounded text-white"
                                 disabled={showTextSection}>
                                 {isLoading ? (
                                     <span className="loading loading-spinner loading-xs"></span>
@@ -261,44 +307,42 @@ const ThumbnailGenerator = () => {
                                         className="block text-md font-medium mr-2">
                                         Text Outline:
                                     </label>
-                                    <input id="textOutline"
-                                           type={"checkbox"}
-                                           value={textOutline}
-                                           onChange={(e) => setTextOutline(e.target.value)}
-                                           className="toggle"
+                                    <input
+                                        id="textShadow"
+                                        type="checkbox"
+                                        checked={textOutline}
+                                        onChange={(e) => setTextOutline(e.target.checked)}
+                                        className="toggle"
                                     />
                                 </div>
 
-                                {/* Text Outline Toggle */}
                                 <div className="flex items-center mb-4">
                                     <label
                                         htmlFor="textShadow"
                                         className="block text-md font-medium mr-2">
                                         Text Drop Shadow:
                                     </label>
-                                    <input id="textShadow"
-                                           type={"checkbox"}
-                                           value={textShadow}
-                                           onChange={(e) => setTextShadow(e.target.value)}
-                                           className="toggle"
+                                    <input
+                                        id="textShadow"
+                                        type="checkbox"
+                                        checked={textShadow}
+                                        onChange={(e) => setTextShadow(e.target.checked)}
+                                        className="toggle"
                                     />
                                 </div>
 
-                                <select
-                                    value={selectedFont}
-                                    onChange={handleFontChange}
-                                    className="input input-bordered w-full mb-4">
-                                    <option value="Impact">Impact</option>
-                                    <option value="Helvetica">Helvetica Bold</option>
-                                    <option value="Bebas Neue">Bebas Neue</option>
-                                    <option value="Roboto">Roboto Bold</option>
-                                    <option value="Anton">Anton</option>
-                                    <option value="Montserrat">Montserrat</option>
-                                    <option value="Playfair Display">Playfair Display</option>
-                                    <option value="Futura">Futura Bold</option>
-                                    <option value="Arial">Arial</option>
-                                    <option value="Verdana">Verdana</option>
-                                </select>
+                                <div className="flex items-center mb-4">
+                                    <select
+                                        value={selectedFont}
+                                        onChange={handleFontChange}
+                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600">
+                                        {fontSelector.map(option => (
+                                            <option value={option.value} key={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                         )}
                     </div>

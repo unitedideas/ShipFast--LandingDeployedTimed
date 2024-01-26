@@ -2,7 +2,7 @@ import themes from "daisyui/src/theming/themes.js";
 
 const config = {
   // REQUIRED
-  appName: "YouThumb",
+  appName: "Start Generating Now ",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
     "Proven Ai generated thumbnails for your YouTube videos. Get more views and subscribers with YouThumb.",
