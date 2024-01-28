@@ -201,7 +201,7 @@ console.log("selected", selected)
                                                 id={"imageStyle"}
                                                 type={"text"}
                                                 placeholder={"Describe the art style: watercolor, oil painting, photorealistic"}
-                                                value={setArtLabel}
+                                                value={artLabel}
                                                 className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
                                                 onChange={(e) => setSelectedStyleValue(e.target.value)}
                                             />
@@ -220,7 +220,6 @@ console.log("selected", selected)
                         )}
 
                         {!showTextSection && (
-
                             <button
                                 className="btn-gradient btn w-full p-3 rounded text-white"
                                 disabled={showTextSection}>
@@ -257,7 +256,8 @@ console.log("selected", selected)
                                         className="block text-md font-medium mr-2">
                                         Font Size:
                                     </label>
-                                    <input id="fontSize" type="range"
+                                    <input id="fontSize"
+                                           type="range"
                                            min="20"
                                            max="200"
                                            value={fontSize}

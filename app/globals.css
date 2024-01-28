@@ -21,6 +21,79 @@ progress::-webkit-progress-value {
 }
 
 
+/*Slider*/
+.slider-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider-image-container img {
+  width: 100%;
+  display: none; /* Hide all images by default */
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px; /* Size of the arrow icons */
+  color: white; /* Color of the arrow icons */
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.left-arrow {
+  left: 10px;
+}
+
+.right-arrow {
+  right: 10px;
+}
+
+.slider-dots {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  padding: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  background: gray;
+  border: 1px solid black; /* This adds the black outline */
+}
+
+.dot.active {
+  background: white;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.left-arrow {
+  left: 10px;
+}
+
+.right-arrow {
+  right: 10px;
+}
+
+.slider-arrow img {
+  width: 24px; /* or the size of your custom chevrons */
+  height: auto; /* maintain aspect ratio */
+}
+
 @layer base {
   .btn-gradient {
     @apply !bg-gradient !bg-[length:300%_300%] hover:saturate-[1.2] shadow duration-100 !border-0 !border-transparent !bg-transparent animate-shimmer disabled:!bg-none disabled:!bg-gray-500/30  !text-white;
