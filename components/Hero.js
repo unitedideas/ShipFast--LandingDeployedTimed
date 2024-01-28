@@ -5,6 +5,9 @@ import CustomSlider from "@/components/Slider";
 const images = [
     '/assets/asset_thumbnail_1.png',
     '/assets/thumbnail - 2024-01-25T213552.168.png',
+    '/assets/thumbnail - 2024-01-25T233704.106.png',
+    '/assets/thumbnail - 2024-01-25T230943.667.png',
+    '/assets/thumbnail - 2024-01-25T235606.498.png',
 ];
 
 const Hero = () => {
