@@ -5,13 +5,13 @@ import Image from "next/image";
 import Draggable from 'react-draggable';
 import domtoimage from 'dom-to-image';
 import imageType from "@/app/util/artTypeSelector";
-import fontSelector from "@/app/util/fontSelector";
 import artTypeSelector from "@/app/util/artTypeSelector";
+import fontSelector from "@/app/util/fontSelector";
 
 const ThumbnailGenerator = () => {
     const inputRef = useRef(null);
     const [sceneDescription, setSceneDescription] = useState("");
-    const [subject, setSubject] = useState("");
+    const [mainSubject, setMainSubject] = useState("");
     const [tnText, settnText] = useState("");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
@@ -19,13 +19,8 @@ const ThumbnailGenerator = () => {
     const [selectedFont, setSelectedFont] = useState(fontSelector[0].value);
     const [textX, setTextX] = useState(335); // X-coordinate for text placement
     const [textY, setTextY] = useState(-400); // Y-coordinate for text placement
-
     const [artLabel, setArtLabel] = useState("");
     const [selectedStyleValue, setSelectedStyleValue] = useState(artTypeSelector[0].value); // Default to the first option
-
-    // todo: use setTextX(element.offsetWidth / 2) and setTextY(element.offsetHeight * 0.1 * -1) to set the text correctly on different size canvases
-    // const [textX, setTextX] = useState(0); // X-coordinate for text placement
-    // const [textY, setTextY] = useState(0); // Y-coordinate for text placement
     const [fontSize, setFontSize] = useState(40); // Default font size
     const [textColor, setTextColor] = useState('#FFFFFF'); // Default white color
     const [textRotation, setTextRotation] = useState(0); // Rotation in degrees
@@ -43,14 +38,10 @@ const ThumbnailGenerator = () => {
 
     const handleArtStyleChange = (e) => {
         const value = e.target.value;
-        console.log("value", value);
         setSelectedStyleValue(value);
-console.log("selectedOption", selectedStyleValue)
         // Update artStyle based on the selection
         const selected = imageType.find(option => option.value === value);
-console.log("selected", selected)
         if (selected && selected.value !== 'userDescription') {
-            console.log("selected.label", selected.label)
             setArtLabel(selected.label); // Set to predefined artStyle if not 'userDescription'
         } else {
             setArtLabel(''); // Reset or keep the user's input if 'userDescription'
@@ -93,12 +84,10 @@ console.log("selected", selected)
         setIsDisabled(true); // Disable the button to prevent multiple submissions
 
         try {
-            // Perform the API call
-            console.log("selectedStyleValue",selectedStyleValue)
             const response = await apiClient.post("/thumbNailGenerator", {
-                subject,
+                mainSubject,
                 sceneDescription,
-                selectedStyleValue,
+                artLabel,
             });
 
             if (response.thumbnail.data && response.thumbnail.data.length > 0) {
@@ -135,27 +124,28 @@ console.log("selected", selected)
                                 {/*<h4 className="text-sm text-gray-500 mb-4">*/}
                                 {/*    *Note: You will be able to add text and a title after the image is created.*/}
                                 {/*</h4>*/}
-                                <div className="flex items-center mb-4">
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="mainSubject"
-                                        className="block text-md font-medium mr-2">
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}>
                                         Main Subject:
                                     </label>
                                     <input
                                         required
                                         id="MainSubject"
                                         type="text"
-                                        value={subject}
+                                        value={mainSubject}
                                         placeholder="Describe the main characters or objects: Happy Puppies"
-                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
-                                        onChange={(e) => setSubject(e.target.value)}
+                                        className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
+                                        onChange={(e) => setMainSubject(e.target.value)}
                                     />
                                 </div>
 
-                                <div className={"flex items-center mb-4"}>
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor={"sceneDescription"}
-                                        className={"block text-md font-medium mr-2"}>
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Scene Description:
                                     </label>
                                     <input
@@ -169,17 +159,19 @@ console.log("selected", selected)
                                     />
                                 </div>
 
-                                <div className={"flex items-center mb-4"}>
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor={"sceneDescription"}
-                                        className={"block text-md font-medium mr-2"}>
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Select Artistic Style:
                                     </label>
                                     <select
                                         id={"artStyleSelect"}
                                         value={selectedStyleValue}
                                         onChange={handleArtStyleChange}
-                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600">
+                                        className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
+                                    >
                                         {imageType.map(option => (
                                             <option value={option.value} key={option.value}>
                                                 {option.label}
@@ -190,10 +182,11 @@ console.log("selected", selected)
 
 
                                 {selectedStyleValue === 'userDescription' &&
-                                    (<div className={"flex items-center mb-4"}>
+                                    (<div className={"flex flex-col md:flex-row items-center mb-4"}>
                                             <label
                                                 htmlFor={"imageStyle"}
-                                                className={"block text-md font-medium mr-2"}>
+                                                className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                            >
                                                 Artistic Style:
                                             </label>
                                             <input
@@ -203,7 +196,7 @@ console.log("selected", selected)
                                                 placeholder={"Describe the art style: watercolor, oil painting, photorealistic"}
                                                 value={artLabel}
                                                 className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
-                                                onChange={(e) => setSelectedStyleValue(e.target.value)}
+                                                onChange={(e) => setArtLabel(e.target.value)}
                                             />
                                         </div>
                                     )
@@ -214,7 +207,7 @@ console.log("selected", selected)
                                 <p className={"text-lg opacity-80 mb-6 text-center"}>
                                     Style:{artLabel},
                                     Description:{sceneDescription},
-                                    Subject:{subject}
+                                    Subject:{mainSubject}
                                 </p>
                             </div>
                         )}
@@ -234,10 +227,12 @@ console.log("selected", selected)
                         {/*This section is for text creation*/}
                         {showTextSection && (
                             <div>
-                                <div className="flex items-center mb-4">
+
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="tnText"
-                                        className="block text-md font-medium mr-2">
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Title Text:
                                     </label>
                                     <input
@@ -250,10 +245,11 @@ console.log("selected", selected)
                                     />
                                 </div>
 
-                                <div className="flex items-center mb-4">
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="fontSize"
-                                        className="block text-md font-medium mr-2">
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Font Size:
                                     </label>
                                     <input id="fontSize"
@@ -269,7 +265,8 @@ console.log("selected", selected)
                                 <div className="flex items-center mb-4 rounded">
                                     <label
                                         htmlFor="textColor"
-                                        className="block text-md font-medium mr-2">
+                                        className="block text-md font-medium mr-2"
+                                    >
                                         Text Color: {textColor}
                                     </label>
                                     <input id="textColor"
@@ -281,10 +278,11 @@ console.log("selected", selected)
                                 </div>
 
 
-                                <div className="flex items-center mb-4">
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="textRotation"
-                                        className="block text-md font-medium mr-2">
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Text Rotation: {textRotation}
                                     </label>
                                     <input
@@ -294,16 +292,16 @@ console.log("selected", selected)
                                         max="360"
                                         value={textRotation}
                                         onChange={(e) => setTextRotation(e.target.value)}
-                                        className="flex-1"
+                                        className={"flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"}
                                     />
                                 </div>
 
-
                                 {/* Drop Shadow Toggle */}
-                                <div className="flex items-center mb-4">
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="textOutline"
-                                        className="block text-md font-medium mr-2">
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Text Outline:
                                     </label>
                                     <input
@@ -315,10 +313,11 @@ console.log("selected", selected)
                                     />
                                 </div>
 
-                                <div className="flex items-center mb-4">
+                                <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="textShadow"
-                                        className="block text-md font-medium mr-2">
+                                        className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
+                                    >
                                         Text Drop Shadow:
                                     </label>
                                     <input
@@ -334,7 +333,8 @@ console.log("selected", selected)
                                     <select
                                         value={selectedFont}
                                         onChange={handleFontChange}
-                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600">
+                                        className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
+                                    >
                                         {fontSelector.map(option => (
                                             <option value={option.value} key={option.value}>
                                                 {option.label}

@@ -10,14 +10,10 @@ const openAI = new OpenAI();
 export async function POST(req) {
     const body = await req.json();
 
-    const determinedStyle = setArtStyle(body.selectedStyleValue)
-
-    console.log("determinedStyle", determinedStyle)
-
     const genBody = {
         model: "dall-e-3",
         // prompt: `${body.subject}, ${body.sceneDescription}, Sigma 85mm f/1.4`, // blurred background
-        prompt: `${body.subject}, ${body.sceneDescription}, ${determinedStyle}`,
+        prompt: `${body.mainSubject}, ${body.sceneDescription}, ${body.artLabel}`,
         quality: "standard",
         // quality: "hd",
         size: "1792x1024",
@@ -29,18 +25,10 @@ export async function POST(req) {
     try {
         const thumbNail = await openAI.images.generate(genBody);
 
-        return NextResponse.json({ thumbnail: thumbNail }, { status: 200 });
+        return NextResponse.json({thumbnail: thumbNail}, {status: 200});
     } catch (e) {
         console.error("GPT Error: " + e);
         // Return a NextResponse object with an error status and message
-        return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
+        return NextResponse.json({error: "An internal server error occurred."}, {status: 500});
     }
-}
-
-const setArtStyle = (selectedArtType) => {
-    console.log("selectedArtType", selectedArtType)
-    // Find the object in the array that matches the selectedArtType
-    const selectedTypeObj = imageType.find(type => type.value === selectedArtType);
-    // Return the description if found, otherwise return an empty string
-    return selectedTypeObj ? selectedTypeObj.artStyleDescription : selectedArtType;
 }

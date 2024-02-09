@@ -5,7 +5,6 @@ import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-import ThumbnailGenerator from "@/components/ThumbnailGenerator";
 
 export default function Home() {
     return (
@@ -14,7 +13,6 @@ export default function Home() {
             <main>
                 <Hero/>
                 <Problem/>
-                <ThumbnailGenerator/>
                 <Pricing/>
                 <FAQ/>
                 <CTA/>
