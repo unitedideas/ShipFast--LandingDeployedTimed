@@ -56,6 +56,10 @@ const ThumbnailGenerator = () => {
     function handleFontChange(event) {
         setSelectedFont(event.target.value);
     }
+    // Function to handle font selection
+    function cancelRequestAndReset() {
+
+    }
 
     const handleArtStyleChange = async (e) => {
         const value = e.target.value;
