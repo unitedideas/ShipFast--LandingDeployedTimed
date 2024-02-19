@@ -1,4 +1,5 @@
 import config from "@/config";
+import ButtonSignin from "@/components/ButtonSignin";
 
 const Arrow = ({extraStyle}) => {
     return (
@@ -48,9 +49,9 @@ const Problem = () => {
                 <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8">
                     Crappy thumbnails are killing your viewer count.
                 </h2>
-                <p className="max-w-xl mx-auto text-lg opacity-90 leading-relaxed mb-10">
-                    {"Don't let viewers pass you by because you have a crappy thumbnail when you could be rapidly generate multiple amazing thumbnails in just a few seconds."}
-                </p>
+                {/*<p className="max-w-xl mx-auto text-lg opacity-90 leading-relaxed mb-10">*/}
+                {/*    {"Don't let viewers pass you by because you have a crappy thumbnail when you could be rapidly generate multiple amazing thumbnails in just a few seconds."}*/}
+                {/*</p>*/}
                 <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8">
                     Turn this...
                 </h2>
@@ -86,11 +87,8 @@ const Problem = () => {
                         <Step emoji="🚀" text="Strap your viewership to a rocket"/>
                     </div>
                     <div>
-                        <button className="btn btn-primary btn-wide mb-10">
-                            {config.appName}
-                        </button>
+                        <ButtonSignin extraStyle="btn-primary" text={"Create your Thumbnail Free"}/>
                     </div>
-
                 </div>
             </div>
         </section>

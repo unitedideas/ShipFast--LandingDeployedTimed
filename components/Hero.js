@@ -1,6 +1,6 @@
 "use client";
-import config from "@/config";
 import CustomSlider from "@/components/Slider";
+import ButtonSignin from "@/components/ButtonSignin";
 
 const images = [
     '/assets/asset_thumbnail_1.png',
@@ -17,16 +17,14 @@ const Hero = () => {
             <div
                 className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
                 <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight md:-mb-4">
-                    Generate YouTube thumbnails fast!
+                    Generate YouTube Thumbnails Fast!
                 </h1>
                 <p className="text-lg opacity-80 leading-relaxed">
                     Generate thumbnails at the highest resolution Youtube will allow.
+                    Then add text to them.
                     From idea to posted in seconds.
                 </p>
-                <button className="btn btn-primary btn-wide">
-                    {config.appName}
-                </button>
-
+                <ButtonSignin extraStyle="btn-primary" text={"Create your Thumbnail Free"}/>
                 {/*<TestimonialsAvatars priority={true}/>*/}
             </div>
 

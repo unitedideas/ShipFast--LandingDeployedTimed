@@ -2,10 +2,10 @@ import themes from "daisyui/src/theming/themes.js";
 
 const config = {
   // REQUIRED
-  appName: "Start Generating Now ",
+  appName: "Online YouTube Thumbnail Maker",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
-    "Proven Ai generated thumbnails for your YouTube videos. Get more views and subscribers with YouThumb.",
+    "Generate free thumbnails for your YouTube videos. Get more views and subscribers... Free!",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
   domainName: "ship-fast-landing-deployed-timed.vercel.app",
   crisp: {
