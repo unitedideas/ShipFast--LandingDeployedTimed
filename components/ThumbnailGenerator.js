@@ -250,7 +250,7 @@ const ThumbnailGenerator = () => {
                                     )}
                                 </button>
                                 <button
-                                    style={{width: '25%'}}
+                                    style={{width: '22%'}}
                                     className="btn-gradient btn p-3 rounded text-white hover:bg-red-700"
                                     disabled={showTextSection}
                                     onClick={isLoading ? cancelRequestAndReset : resetForm}
