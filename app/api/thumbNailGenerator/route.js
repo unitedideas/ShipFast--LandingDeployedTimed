@@ -10,17 +10,19 @@ const openAI = new OpenAI();
 export async function POST(req) {
     const body = await req.json();
 
+
+
     const genBody = {
         model: "dall-e-3",
-        // prompt: `${body.subject}, ${body.sceneDescription}, Sigma 85mm f/1.4`, // blurred background
-        prompt: `${body.mainSubject}, ${body.sceneDescription}, ${body.artLabel}`,
-        quality: "standard",
-        // quality: "hd",
-        size: "1792x1024",
-        // style: "natural",
-        style: "vivid",
+        prompt: `${body.mainSubject}, ${body.sceneDescription}, ${body.artLabel}`, // Adjust the prompt based on the option selected
+        quality: "hd",
+        size: "1792x1024", // or "1024x1792" for full-body portraits
+        style: "natural",
         response_format: "b64_json",
     }
+
+    console.log("Prompt: " + genBody.prompt);
+    console.log("Art Label: " + body.artLabel);
 
     try {
         const thumbNail = await openAI.images.generate(genBody);

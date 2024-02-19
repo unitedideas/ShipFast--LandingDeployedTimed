@@ -36,16 +36,12 @@ const ThumbnailGenerator = () => {
         setSelectedFont(event.target.value);
     }
 
-    const handleArtStyleChange = (e) => {
+    const handleArtStyleChange = async (e) => {
         const value = e.target.value;
         setSelectedStyleValue(value);
         // Update artStyle based on the selection
         const selected = imageType.find(option => option.value === value);
-        if (selected && selected.value !== 'userDescription') {
-            setArtLabel(selected.label); // Set to predefined artStyle if not 'userDescription'
-        } else {
-            setArtLabel(''); // Reset or keep the user's input if 'userDescription'
-        }
+        await setArtLabel(selected.artStyleDescription);
     };
 
     // Function to save the final image
@@ -111,7 +107,7 @@ const ThumbnailGenerator = () => {
     };
 
     return (
-        <div className={"bg-gray-900 text-white min-h-screen p-5"}>
+        <div className={"bg-gray-900 text-white w-160 md:w-320 p-5"}>
             <div className={"max-w-2xl mx-auto"}>
 
                 <div className={"p-5 rounded"}>
@@ -164,7 +160,7 @@ const ThumbnailGenerator = () => {
                                         htmlFor={"sceneDescription"}
                                         className={"block text-md font-medium mr-2 mb-1 md:mb-0"}
                                     >
-                                        Select Artistic Style:
+                                        Art Type:
                                     </label>
                                     <select
                                         id={"artStyleSelect"}
@@ -205,9 +201,17 @@ const ThumbnailGenerator = () => {
                         ) : (
                             <div>
                                 <p className={"text-lg opacity-80 mb-6 text-center"}>
-                                    Style:{artLabel},
-                                    Description:{sceneDescription},
-                                    Subject:{mainSubject}
+
+                                    Subject: {mainSubject}
+                                </p>
+
+                                <p className={"text-lg opacity-80 mb-6 text-center"}>
+
+                                    Description: {sceneDescription}
+                                </p>
+
+                                <p className={"text-lg opacity-80 mb-6 text-center"}>
+                                    Style: {artLabel}
                                 </p>
                             </div>
                         )}
