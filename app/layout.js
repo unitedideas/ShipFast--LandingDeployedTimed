@@ -24,13 +24,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme={config.colors.theme} className={font.className}>
       {config.domainName && (
-        <head>
-          <PlausibleProvider domain={config.domainName} />
-        </head>
+          <head>
+            <script async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7178166368516222"
+                    crossOrigin="anonymous">
+            </script>
+
+            <PlausibleProvider domain={config.domainName}/>
+          </head>
       )}
       <body>
-        {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
-        <Analytics />
+      {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
+      <Analytics />
         <SpeedInsights />
         <ClientLayout>{children}</ClientLayout>
       </body>
