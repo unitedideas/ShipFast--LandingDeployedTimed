@@ -28,6 +28,27 @@ const ThumbnailGenerator = () => {
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
     const [showTextSection, setShowTextSection] = useState(false);
 
+    const resetForm = () => {
+        setSceneDescription("");
+        setMainSubject("");
+        settnText("");
+        setBase64Image([]);
+        setIsLoading(false);
+        setIsDisabled(false);
+        setSelectedFont(fontSelector[0].value);
+        setTextX(335);
+        setTextY(-400);
+        setArtLabel("");
+        setSelectedStyleValue(artTypeSelector[0].value);
+        setFontSize(40);
+        setTextColor('#FFFFFF');
+        setTextRotation(0);
+        setTextShadow(false);
+        setTextOutline(false);
+        setShowTextSection(false);
+    };
+
+
     const width = 1920;
     const height = 1080;
 
@@ -217,17 +238,31 @@ const ThumbnailGenerator = () => {
                         )}
 
                         {!showTextSection && (
-                            <button
-                                className="btn-gradient btn w-full p-3 rounded text-white"
-                                disabled={showTextSection}>
-                                {isLoading ? (
-                                    <span className="loading loading-spinner loading-xs"></span>
-                                ) : (
-                                    "Generate Thumbnail"
-                                )}
-                            </button>
+                            <div className="button-container flex">
+                                <button
+                                    style={{width: '75%', marginRight: '3%'}}
+                                    className="btn-primary btn-gradient btn p-3 rounded text-white"
+                                    disabled={showTextSection}>
+                                    {isLoading ? (
+                                        <span className="loading loading-spinner loading-xs"></span>
+                                    ) : (
+                                        "✨ Generate Thumbnail"
+                                    )}
+                                </button>
+                                <button
+                                    style={{width: '25%'}}
+                                    className="btn-gradient btn p-3 rounded text-white hover:bg-red-700"
+                                    disabled={showTextSection}
+                                    onClick={isLoading ? cancelRequestAndReset : resetForm}
+                                >
+                                    {isLoading ? (
+                                        <span className="loading loading-spinner loading-xs"></span>
+                                    ) : (
+                                        "♻️ Reset"
+                                    )}
+                                </button>
+                            </div>
                         )}
-
                         {/*This section is for text creation*/}
                         {showTextSection && (
                             <div>
@@ -354,7 +389,7 @@ const ThumbnailGenerator = () => {
                 {/*display the array of images*/}
                 <div
                     className="w-full relative"
-                    style={showTextSection ? {paddingTop: '56.25%'} : {}}
+                    style={showTextSection ? {paddingTop: '65%'} : {}}
                     id={'the-whole-thing'}>
                     {Array.isArray(base64Image) && base64Image.length > 0 && (
                         <div className="image-preview absolute top-0 left-0 right-0 bottom-0">
