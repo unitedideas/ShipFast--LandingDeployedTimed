@@ -9,6 +9,7 @@ const nextConfig = {
             "logos-world.net",
             "i.etsystatic.com",
             "blog.photoshelter.com",
+            "oaidalleapiprodscus.blob.core.windows.net",
         ],
     },
 };

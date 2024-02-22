@@ -13,7 +13,7 @@ const ThumbnailGenerator = () => {
     const [sceneDescription, setSceneDescription] = useState("");
     const [mainSubject, setMainSubject] = useState("");
     const [tnText, settnText] = useState("");
-    const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
+    const [imageURL, setImageURL] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFont, setSelectedFont] = useState(fontSelector[0].value);
     const [textX, setTextX] = useState(335); // X-coordinate for text placement
@@ -32,7 +32,7 @@ const ThumbnailGenerator = () => {
         setSceneDescription("");
         setMainSubject("");
         settnText("");
-        setBase64Image([]);
+        setImageURL([]);
         setIsLoading(false);
         setSelectedFont(fontSelector[0].value);
         setTextX(335);
@@ -64,6 +64,7 @@ const ThumbnailGenerator = () => {
     const handleArtStyleChange = async (e) => {
         const value = e.target.value;
         setSelectedStyleValue(value);
+
         // Update artStyle based on the selection
         const selected = imageType.find(option => option.value === value);
         await setArtLabel(selected.artStyleDescription);
@@ -99,6 +100,18 @@ const ThumbnailGenerator = () => {
             });
     }
 
+    const handleApiResponse = (response) => {
+        if (response.thumbnail.data && response.thumbnail.data.length > 0) {
+            // Map through the data array and set image URLs in the state
+            const imageURLs = response.thumbnail.data.map((item) => item.url); // Assuming 'url' is the key in the response containing the image URL
+            setImageURL(imageURLs); // Renaming this state variable to something like setImageURLs might be more appropriate now
+            setShowTextSection(true); // Show text section if images are present
+        } else {
+            setShowTextSection(false); // Hide text section if no images
+        }
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -115,16 +128,14 @@ const ThumbnailGenerator = () => {
                 artLabel,
             });
 
+
+            console.log("response")
+            console.log(response)
+
             if (response.thumbnail.data && response.thumbnail.data.length > 0) {
-                // Map through the data array and set images in the state
-                const imageList = response.thumbnail.data.map((item) => item.b64_json);
-                setBase64Image(imageList);
-                setShowTextSection(true); // Show text section if images are present
-            } else {
-                setShowTextSection(false); // Hide text section if no images
+                handleApiResponse(response);
             }
 
-            // Reset the form fields and remove focus
             inputRef.current?.blur();
         } catch (error) {
             console.error(error);
@@ -397,14 +408,13 @@ const ThumbnailGenerator = () => {
                     className="w-full relative"
                     style={showTextSection ? {paddingTop: '65%'} : {}}
                     id={'the-whole-thing'}>
-                    {Array.isArray(base64Image) && base64Image.length > 0 && (
+                    {Array.isArray(imageURL) && imageURL.length > 0 && (
                         <div className="image-preview absolute top-0 left-0 right-0 bottom-0">
-                            {base64Image.map((imageData, index) => (
+                            {imageURL.map((imageUrl, index) => (
                                 <div
-                                    key={index}
-                                    className="thumbnail-item absolute inset-0">
+                                    key={index} className="thumbnail-item absolute inset-0">
                                     <Image
-                                        src={`data:image/png;base64,${imageData}`}
+                                        src={imageUrl} // Directly using the URL here
                                         alt={`Generated Thumbnail ${index + 1}`}
                                         width={width}
                                         height={height}
