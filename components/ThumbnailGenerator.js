@@ -15,10 +15,10 @@ const ThumbnailGenerator = () => {
     const [tnText, settnText] = useState("");
     const [base64Image, setBase64Image] = useState([]); // State to store the base64 image data
     const [isLoading, setIsLoading] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
     const [selectedFont, setSelectedFont] = useState(fontSelector[0].value);
     const [textX, setTextX] = useState(335); // X-coordinate for text placement
     const [textY, setTextY] = useState(-400); // Y-coordinate for text placement
+    const [artValue, setArtValue] = useState("");
     const [artLabel, setArtLabel] = useState("");
     const [selectedStyleValue, setSelectedStyleValue] = useState(artTypeSelector[0].value); // Default to the first option
     const [fontSize, setFontSize] = useState(40); // Default font size
@@ -34,10 +34,10 @@ const ThumbnailGenerator = () => {
         settnText("");
         setBase64Image([]);
         setIsLoading(false);
-        setIsDisabled(false);
         setSelectedFont(fontSelector[0].value);
         setTextX(335);
         setTextY(-400);
+        setArtValue("");
         setArtLabel("");
         setSelectedStyleValue(artTypeSelector[0].value);
         setFontSize(40);
@@ -67,6 +67,7 @@ const ThumbnailGenerator = () => {
         // Update artStyle based on the selection
         const selected = imageType.find(option => option.value === value);
         await setArtLabel(selected.artStyleDescription);
+        await setArtValue(selected.label);
     };
 
     // Function to save the final image
@@ -101,8 +102,11 @@ const ThumbnailGenerator = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (selectedStyleValue === 'userDescription' ){
+            setArtValue(artLabel);
+        }
+
         setIsLoading(true);
-        setIsDisabled(true); // Disable the button to prevent multiple submissions
 
         try {
             const response = await apiClient.post("/thumbNailGenerator", {
@@ -127,7 +131,6 @@ const ThumbnailGenerator = () => {
             // Handle the error appropriately
         } finally {
             setIsLoading(false);
-            setIsDisabled(false); // Re-enable the button after the operation is complete
         }
     };
 
@@ -236,7 +239,7 @@ const ThumbnailGenerator = () => {
                                 </p>
 
                                 <p className={"text-lg opacity-80 mb-6 text-center"}>
-                                    Style: {artLabel}
+                                    Style: {artValue}
                                 </p>
                             </div>
                         )}

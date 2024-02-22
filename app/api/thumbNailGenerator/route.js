@@ -1,6 +1,5 @@
 import {NextResponse} from "next/server";
 import OpenAI from "openai";
-import imageType from "@/app/util/artTypeSelector";
 
 export const runtime = 'edge';
 
@@ -10,8 +9,6 @@ const openAI = new OpenAI();
 export async function POST(req) {
     const body = await req.json();
 
-
-
     const genBody = {
         model: "dall-e-3",
         prompt: `${body.mainSubject}, ${body.sceneDescription}, ${body.artLabel}`, // Adjust the prompt based on the option selected
@@ -20,9 +17,6 @@ export async function POST(req) {
         style: "natural",
         response_format: "b64_json",
     }
-
-    console.log("Prompt: " + genBody.prompt);
-    console.log("Art Label: " + body.artLabel);
 
     try {
         const thumbNail = await openAI.images.generate(genBody);
