@@ -246,7 +246,7 @@ const ThumbnailGenerator = () => {
                                 <button
                                     style={{width: '75%', marginRight: '3%'}}
                                     className="btn-primary btn-gradient btn p-3 rounded text-white"
-                                    disabled={showTextSection}>
+                                    disabled={isLoading}>
                                     {isLoading ? (
                                         <span className="loading loading-spinner loading-xs"></span>
                                     ) : (
@@ -256,11 +256,10 @@ const ThumbnailGenerator = () => {
                                 <button
                                     style={{width: '22%'}}
                                     className="btn-gradient btn p-3 rounded text-white hover:bg-red-700"
-                                    disabled={showTextSection}
                                     onClick={isLoading ? cancelRequestAndReset : resetForm}
                                 >
                                     {isLoading ? (
-                                        <span className="loading loading-spinner loading-xs"></span>
+                                        "🚫 Cancel and Reset"
                                     ) : (
                                         "♻️ Reset"
                                     )}
@@ -410,10 +409,20 @@ const ThumbnailGenerator = () => {
                                         objectFit="contain"
                                     />
                                     <button
+                                        style={{width: '75%', marginRight: '3%'}}
                                         onClick={saveFinalImage}
-                                        className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600">
+                                        className="btn-gradient btn w-full p-3 rounded text-white hover:bg-purple-600"
+                                    >
                                         Save Your Awesome New Thumbnail!
                                     </button>
+                                    <button
+                                        style={{width: '22%'}}
+                                        className="btn-gradient btn p-3 rounded text-white hover:bg-red-700"
+                                        onClick={resetForm}
+                                    >
+                                        ♻️ Reset
+                                    </button>
+
                                     <Draggable
                                         bounds="parent"
                                         position={{x: textX, y: textY}}
