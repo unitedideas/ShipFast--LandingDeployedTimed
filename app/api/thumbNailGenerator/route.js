@@ -30,7 +30,7 @@ export async function POST(req) {
         // User who are not logged in can't make a purchase
         if (!session) {
             return NextResponse.json(
-                {error: "You must be logged in to make a purchase."},
+                {error: "You must be logged in to access the thumbnail generator."},
                 {status: 401}
             );
         }
@@ -63,7 +63,7 @@ const noCamera = "Do not include a camera or camera-related items in the image."
         // Upload the buffer to Supabase storage
         supabase
             .storage
-            .from('onlineyoutubethumbnailmaker')
+            .from('uploads')
             .upload(userID + "/" + uuidv4(), buffer, {
                 contentType: 'image/png',
                 upsert: true,
