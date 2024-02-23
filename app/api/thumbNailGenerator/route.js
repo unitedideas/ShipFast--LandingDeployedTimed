@@ -5,6 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 import {cookies} from "next/headers";
 import {createRouteHandlerClient} from "@supabase/auth-helpers-nextjs";
 import fetch from 'node-fetch';
+import {bucket_onlineyoutubethumbnailmaker} from "@/app/util/imageBucket";
 
 export const runtime = 'edge';
 const openAI = new OpenAI();
@@ -63,7 +64,7 @@ const noCamera = "Do not include a camera or camera-related items in the image."
         // Upload the buffer to Supabase storage
         supabase
             .storage
-            .from('uploads')
+            .from(bucket_onlineyoutubethumbnailmaker)
             .upload(userID + "/" + uuidv4(), buffer, {
                 contentType: 'image/png',
                 upsert: true,

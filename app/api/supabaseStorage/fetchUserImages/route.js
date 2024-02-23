@@ -2,6 +2,7 @@ import {cookies} from "next/headers";
 import {createRouteHandlerClient} from "@supabase/auth-helpers-nextjs";
 import {NextResponse} from "next/server";
 import {getSessionAndValidate} from "@/app/util/getUserSession";
+import {bucket_onlineyoutubethumbnailmaker} from "@/app/util/imageBucket";
 
 export async function GET() {
     const cookieStore = cookies();
@@ -16,7 +17,7 @@ export async function GET() {
     try {
         const {data} = await supabase
             .storage
-            .from('onlineyoutubethumbnailmaker')
+            .from(bucket_onlineyoutubethumbnailmaker)
             .list(folder, {
                 limit: 100,
                 offset: 1,

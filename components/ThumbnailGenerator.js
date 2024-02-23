@@ -89,11 +89,17 @@ const ThumbnailGenerator = () => {
                 // Create a Blob link to download
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.download = 'thumbnail.png';
+                // Append link to the body
+                document.body.appendChild(link);
+                link.style.display = 'none';
                 link.href = url;
+                link.download = 'thumbnail.png';
+                // Programmatically trigger the download
                 link.click();
+                // Remove the link from the DOM
+                document.body.removeChild(link);
                 // Clean up the URL object
-                URL.revokeObjectURL(url);
+                setTimeout(() => URL.revokeObjectURL(url), 100); // Delay revocation
             })
             .catch(function (error) {
                 console.error('oops, something went wrong!', error);
