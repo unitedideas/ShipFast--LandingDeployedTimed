@@ -10,7 +10,7 @@ const ImageGallery = () => {
         // Define the async function inside the effect
         const fetchImages = async () => {
             try {
-                const response = await apiClient.get("/fetchUserImages");
+                const response = await apiClient.get("supabaseStorage/fetchUserImages");
                 if (Array.isArray(response.data)) {
                     setImages(response.data); // Assuming the response has a .data property with the images
                 } else {
