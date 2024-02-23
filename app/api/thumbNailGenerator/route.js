@@ -40,10 +40,9 @@ export async function POST(req) {
     }
 
     const userID = session?.user?.id;
-const noCamera = "Do not include a camera or camera-related items in the image.";
     const genBody = {
         model: "dall-e-3",
-        prompt: `main subject: ${body.mainSubject}, scene description: ${body.sceneDescription}, art style: ${body.artLabel}, ${noCamera}`, // Adjust the prompt based on the option selected
+        prompt: `main subject: ${body.mainSubject}, scene description: ${body.sceneDescription}, art style: ${body.artLabel}`,
         quality: "hd",
         size: "1792x1024", // or "1024x1792" for full-body portraits
         style: "natural",
@@ -69,7 +68,7 @@ const noCamera = "Do not include a camera or camera-related items in the image."
                 contentType: 'image/png',
                 upsert: true,
             })
-            .then(({ data, error }) => {
+            .then(({data, error}) => {
                 if (error) {
                     console.error('Upload error:', error.message);
                 } else {
