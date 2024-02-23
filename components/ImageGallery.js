@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 import apiClient from "@/libs/api";
 
 const ImageGallery = () => {
@@ -11,7 +11,6 @@ const ImageGallery = () => {
         const fetchImages = async () => {
             try {
                 const response = await apiClient.get("/fetchUserImages");
-                console.log("ImageGallery response", response);
                 if (Array.isArray(response.data)) {
                     setImages(response.data); // Assuming the response has a .data property with the images
                 } else {
@@ -22,15 +21,19 @@ const ImageGallery = () => {
             }
         };
         // Call the async function
-        fetchImages().then( () => console.log('ImageGallery fetchImages done'), images);
-    }, [images]); // Empty dependency array means this effect will only run once on mount
+        fetchImages().then(() => console.log('ImageGallery fetchImages done'));
+    }, [])
 
     return (
         <div className="flex flex-wrap p-4">
             {images.map((image, index) => (
                 <div key={index} className="p-2 w-full sm:w-1/2 md:w-1/3">
                     <div className="relative hover:scale-105 transition-transform duration-200">
-                        <img src={image.src} alt={image.alt} loading="lazy" className="w-full h-auto rounded"/>
+                        <img
+                            src={`https://aenehhumfeuxwlvpybvc.supabase.co/storage/v1/object/public/onlineyoutubethumbnailmaker/369abdd5-e4a9-4de9-8b5d-7e008aeaaab6/${image.name}`}
+                            alt={image.alt}
+                            loading="lazy"
+                            className="w-full h-auto rounded"/>
                         <div
                             className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200">
                             <button className="btn-gradient btn p-2 rounded text-white">Edit</button>

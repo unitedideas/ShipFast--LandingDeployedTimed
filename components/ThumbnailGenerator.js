@@ -128,10 +128,6 @@ const ThumbnailGenerator = () => {
                 artLabel,
             });
 
-
-            console.log("response")
-            console.log(response)
-
             if (response.thumbnail.data && response.thumbnail.data.length > 0) {
                 handleApiResponse(response);
             }
