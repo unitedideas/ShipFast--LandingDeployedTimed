@@ -51,33 +51,40 @@ export async function POST(req) {
     }
 
     try {
-        const thumbNail = await openAI.images.generate(genBody);
+        const openAIResponse = await openAI.images.generate(genBody);
+        const imageUrls = openAIResponse.data; // Assuming this is an array of image objects
+        let base64Images = []; // Array to hold base64 encoded images
 
-        const response = await fetch(thumbNail.data[0].url);
-        if (!response.ok) throw new Error('Failed to fetch the thumbnail image');
+        for (let img of imageUrls) {
+            const response = await fetch(img.url);
+            if (!response.ok) throw new Error('Failed to fetch the thumbnail image');
 
-        // Read the response as ArrayBuffer and convert to Buffer
-        const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+            // Read the response as ArrayBuffer and convert to Buffer
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
 
-        // Upload the buffer to Supabase storage
-        supabase
-            .storage
-            .from(bucket_onlineyoutubethumbnailmaker)
-            .upload(userID + "/" + uuidv4(), buffer, {
-                contentType: 'image/png',
-                upsert: true,
-            })
-            .then(({data, error}) => {
-                if (error) {
-                    console.error('Upload error:', error.message);
-                } else {
-                    console.log('Upload successful:', data);
-                }
-            });
+            // Upload the buffer to Supabase storage
+            const uploadPath = `${userID}/${uuidv4()}.png`;
+            const { data, error } = await supabase
+                .storage
+                .from(bucket_onlineyoutubethumbnailmaker)
+                .upload(uploadPath, buffer, {
+                    contentType: 'image/png',
+                    upsert: true,
+                });
 
-        // Return success response
-        return NextResponse.json({thumbnail: thumbNail}, {status: 200});
+            if (error) {
+                console.error('Upload error:', error.message);
+                // Decide how to handle the error, maybe continue to the next image?
+            } else {
+                console.log('Upload successful:', data);
+                // Add the base64 image data to the array
+                base64Images.push(buffer.toString('base64'));
+            }
+        }
+
+        // Return success response with an array of base64 encoded images
+        return NextResponse.json({thumbnails: base64Images.map(b64 => `data:image/png;base64,${b64}`)}, {status: 200});
     } catch (error) {
         return NextResponse.json({error: error.message}, {status: 500});
     }

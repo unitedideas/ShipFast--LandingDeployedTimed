@@ -56,6 +56,7 @@ const ThumbnailGenerator = () => {
     function handleFontChange(event) {
         setSelectedFont(event.target.value);
     }
+
     // Function to handle font selection
     function cancelRequestAndReset() {
 
@@ -107,21 +108,21 @@ const ThumbnailGenerator = () => {
     }
 
     const handleApiResponse = (response) => {
-        if (response.thumbnail.data && response.thumbnail.data.length > 0) {
-            // Map through the data array and set image URLs in the state
-            const imageURLs = response.thumbnail.data.map((item) => item.url); // Assuming 'url' is the key in the response containing the image URL
-            setImageURL(imageURLs); // Renaming this state variable to something like setImageURLs might be more appropriate now
+        console.log('response', response);
+        if (response.thumbnails && Array.isArray(response.thumbnails)) {
+            console.log('thumbnails', response.thumbnails);
+            setImageURL(response.thumbnails); // Set the image URLs in the state, already in the correct format
             setShowTextSection(true); // Show text section if images are present
         } else {
+            console.log('Invalid image data or response');
             setShowTextSection(false); // Hide text section if no images
         }
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (selectedStyleValue === 'userDescription' ){
+        if (selectedStyleValue === 'userDescription') {
             setArtValue(artLabel);
         }
 
@@ -134,9 +135,7 @@ const ThumbnailGenerator = () => {
                 artLabel,
             });
 
-            if (response.thumbnail.data && response.thumbnail.data.length > 0) {
-                handleApiResponse(response);
-            }
+            handleApiResponse(response);
 
             inputRef.current?.blur();
         } catch (error) {
