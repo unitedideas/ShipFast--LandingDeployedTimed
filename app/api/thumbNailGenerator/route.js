@@ -42,13 +42,15 @@ export async function POST(req) {
     const userID = session?.user?.id;
     const genBody = {
         model: "dall-e-3",
-        prompt: `main subject: ${body.mainSubject}, scene description: ${body.sceneDescription}, art style: ${body.artLabel}`,
+        prompt: `${body.mainSubject}, ${body.sceneDescription}, ${body.artLabel}`,
         quality: "hd",
         size: "1792x1024", // or "1024x1792" for full-body portraits
         style: "natural",
         response_format: "url",
         user: userID
     }
+
+    console.log(genBody.prompt)
 
     try {
         const openAIResponse = await openAI.images.generate(genBody);
@@ -65,7 +67,7 @@ export async function POST(req) {
 
             // Upload the buffer to Supabase storage
             const uploadPath = `${userID}/${uuidv4()}.png`;
-            const { data, error } = await supabase
+            const {data, error} = await supabase
                 .storage
                 .from(bucket_onlineyoutubethumbnailmaker)
                 .upload(uploadPath, buffer, {

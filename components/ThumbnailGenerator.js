@@ -108,9 +108,7 @@ const ThumbnailGenerator = () => {
     }
 
     const handleApiResponse = (response) => {
-        console.log('response', response);
         if (response.thumbnails && Array.isArray(response.thumbnails)) {
-            console.log('thumbnails', response.thumbnails);
             setImageURL(response.thumbnails); // Set the image URLs in the state, already in the correct format
             setShowTextSection(true); // Show text section if images are present
         } else {
