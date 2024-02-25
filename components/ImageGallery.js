@@ -50,10 +50,7 @@ const ImageGallery = () => {
 
             // Use response.ok to check for a successful response
             if (Array.isArray(response.data)) {
-                const updatedImages = images.filter(image => image.name !== imageName);
-
-                // Update the state with the new array of images
-                setImages(updatedImages);
+                deleteImageByName(imageName)
             } else {
                 console.error('Expected a successful response but received', response.status);
             }

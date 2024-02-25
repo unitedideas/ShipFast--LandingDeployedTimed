@@ -28,6 +28,7 @@ const ThumbnailGenerator = () => {
     const [textOutline, setTextOutline] = useState(false); // Text outline toggle
     const [showTextSection, setShowTextSection] = useState(false);
 
+
     const resetForm = () => {
         setSceneDescription("");
         setMainSubject("");
@@ -48,6 +49,13 @@ const ThumbnailGenerator = () => {
         setShowTextSection(false);
     };
 
+    const handleKeyPress = (e) => {
+        console.log(e.key); // Add this line to see what keys are being pressed
+        if (e.key === 'Enter' && showTextSection) {
+            e.preventDefault(); // stop default
+            e.stopPropagation(); // stop propagation
+        }
+    };
 
     const width = 1920;
     const height = 1080;
@@ -165,6 +173,7 @@ const ThumbnailGenerator = () => {
                                         Main Subject:
                                     </label>
                                     <input
+                                        onKeyDown={handleKeyPress}
                                         required
                                         id="MainSubject"
                                         type="text"
@@ -183,6 +192,7 @@ const ThumbnailGenerator = () => {
                                         Scene Description:
                                     </label>
                                     <input
+                                        onKeyDown={handleKeyPress}
                                         required
                                         id={"sceneDescription"}
                                         type={"text"}
@@ -201,6 +211,7 @@ const ThumbnailGenerator = () => {
                                         Art Type:
                                     </label>
                                     <select
+                                        onKeyDown={handleKeyPress}
                                         id={"artStyleSelect"}
                                         value={selectedStyleValue}
                                         onChange={handleArtStyleChange}
@@ -224,6 +235,7 @@ const ThumbnailGenerator = () => {
                                                 Artistic Style:
                                             </label>
                                             <input
+                                                onKeyDown={handleKeyPress}
                                                 required
                                                 id={"imageStyle"}
                                                 type={"text"}
@@ -282,7 +294,6 @@ const ThumbnailGenerator = () => {
                         {/*This section is for text creation*/}
                         {showTextSection && (
                             <div>
-
                                 <div className={"flex flex-col md:flex-row items-center mb-4"}>
                                     <label
                                         htmlFor="tnText"
@@ -290,9 +301,8 @@ const ThumbnailGenerator = () => {
                                     >
                                         Title Text:
                                     </label>
-                                    <input
+                                    <textarea
                                         id="tnText"
-                                        type="text"
                                         value={tnText}
                                         placeholder="Title Text"
                                         className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
@@ -307,13 +317,15 @@ const ThumbnailGenerator = () => {
                                     >
                                         Font Size:
                                     </label>
-                                    <input id="fontSize"
-                                           type="range"
-                                           min="20"
-                                           max="200"
-                                           value={fontSize}
-                                           onChange={(e) => setFontSize(e.target.value)}
-                                           className="flex-1"
+                                    <input
+                                        onKeyDown={handleKeyPress}
+                                        id="fontSize"
+                                        type="range"
+                                        min="20"
+                                        max="200"
+                                        value={fontSize}
+                                        onChange={(e) => setFontSize(e.target.value)}
+                                        className="flex-1"
                                     />
                                 </div>
 
@@ -324,11 +336,13 @@ const ThumbnailGenerator = () => {
                                     >
                                         Text Color: {textColor}
                                     </label>
-                                    <input id="textColor"
-                                           type="color"
-                                           value={textColor}
-                                           onChange={(e) => setTextColor(e.target.value)}
-                                           className="flex-1"
+                                    <input
+                                        onKeyDown={handleKeyPress}
+                                        id="textColor"
+                                        type="color"
+                                        value={textColor}
+                                        onChange={(e) => setTextColor(e.target.value)}
+                                        className="flex-1"
                                     />
                                 </div>
 
@@ -341,6 +355,7 @@ const ThumbnailGenerator = () => {
                                         Text Rotation: {textRotation}
                                     </label>
                                     <input
+                                        onKeyDown={handleKeyPress}
                                         id="textRotation"
                                         type="range"
                                         min="0"
@@ -360,6 +375,7 @@ const ThumbnailGenerator = () => {
                                         Text Outline:
                                     </label>
                                     <input
+                                        onKeyDown={handleKeyPress}
                                         id="textShadow"
                                         type="checkbox"
                                         checked={textOutline}
@@ -376,6 +392,7 @@ const ThumbnailGenerator = () => {
                                         Text Drop Shadow:
                                     </label>
                                     <input
+                                        onKeyDown={handleKeyPress}
                                         id="textShadow"
                                         type="checkbox"
                                         checked={textShadow}
@@ -386,6 +403,7 @@ const ThumbnailGenerator = () => {
 
                                 <div className="flex items-center mb-4">
                                     <select
+                                        onKeyDown={handleKeyPress}
                                         value={selectedFont}
                                         onChange={handleFontChange}
                                         className="flex-1 text-md font-medium p-2 rounded bg-gray-700 border border-gray-600 focus:ring focus:ring-amber-600"
@@ -436,12 +454,14 @@ const ThumbnailGenerator = () => {
                                     </button>
 
                                     <Draggable
-                                        bounds="parent"
                                         position={{x: textX, y: textY}}
                                         onDrag={(e, data) => {
                                             setTextX(data.x);
                                             setTextY(data.y);
-                                        }}>
+                                        }}
+                                        height={height}
+                                        width={width}
+                                    >
                                         <div
                                             style={{
                                                 position: 'absolute',
@@ -452,7 +472,7 @@ const ThumbnailGenerator = () => {
                                                 width: '0', // Collapse the parent div to a point
                                                 height: '0', // Collapse the parent div to a point
                                             }}>
-                                            <div
+                                            <div id={'text-overlay'}
                                                 style={{
                                                     color: textColor,
                                                     fontFamily: selectedFont,
@@ -461,6 +481,8 @@ const ThumbnailGenerator = () => {
                                                     transformOrigin: 'center center',
                                                     textShadow: textShadow ? '4px 4px 8px rgba(0, 0, 0, 0.5)' : 'none',
                                                     WebkitTextStroke: textOutline ? '1px black' : '0px transparent',
+                                                    height: '100%',
+                                                    width: '100%',
                                                 }}
                                             >
                                                 {tnText}
