@@ -31,26 +31,9 @@ export async function DELETE(req) {
 
     if (err) {
         console.log("err");
-        console.log("err");
-        console.log("err");
-        console.log("err");
-        console.log("err");
-        console.log("err");
-        console.log("err");
-        console.log(err);
-        console.log(err);
-        console.log(err);
-        console.log(err);
-        console.log(err);
-        console.log(err);
-        console.log(err);
         // Return a response with a 400 status code on error
         return NextResponse.json({ error: err.message }, { status: 400 });
     } else {
-        console.log("success");
-        console.log("success");
-        console.log("success");
-        console.log("success");
         console.log("success");
         // Return a response with a 200 status code on success
         return NextResponse.json({data}, {status: 200});
