@@ -1,10 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -34,7 +30,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import ButtonCheckout from "@/components/ButtonCheckout";
 
 const data = [
     {
@@ -158,7 +153,7 @@ const columns = [
     },
 ];
 
-function DataTableDemo() {
+const DataTableDemo = () => {
     const [sorting, setSorting] = useState([]);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnVisibility, setColumnVisibility] = useState({});

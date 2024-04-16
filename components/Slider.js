@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 
 const CustomSlider = ({ images, autoPlayDuration = 3000 }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
